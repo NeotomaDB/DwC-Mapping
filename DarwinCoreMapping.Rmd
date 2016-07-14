@@ -34,6 +34,8 @@ table tr th :last-child, table tr td :last-child {
 
 # DwC Alignment:
 
+This document is based on the key terms from [here](http://rs.tdwg.org/dwc/terms/).  Additional terms could be added, but I haven't added them in.  This is simply the base implementation.
+
 ## Record Level Terms
 
 | Implemented | Neotoma | DarwinCore | Description |
@@ -79,7 +81,7 @@ table tr th :last-child, table tr td :last-child {
 |  | | preparations | |
 |  | | disposition | |
 |  | | associatedMedia | |
-| * | ``Publications:Citation` pipe separated | associatedReferences | |
+| * | `Publications:Citation` pipe separated | associatedReferences | |
 |  | | associatedSequences | |
 | * | `"cooccurrs with: "` | associatedTaxa | A list (concatenated and separated) of identifiers or names of taxa and their associations with the Occurrence. |
 |  | | otherCatalogNumbers | |

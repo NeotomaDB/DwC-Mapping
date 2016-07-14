@@ -12,12 +12,12 @@ Initial work on this project was made possible through collaboration as part of 
 
 * [Simon Goring](http://simongoring.github.io) - Assistant Scientist, University of Wisconsin
 * [Jack Williams](https://github.com/iceageecologist) - Professor, University of Wisconsin
-* [Mark Uhen](http://github.com/markuhen)
-* [Michael McLennan](https://github.com/mmcclenn)
-* [John Wieczorek](http://github.com/tucotuco)
+* [Mark Uhen](http://github.com/markuhen) - George Mason University
+* [Michael McLennan](https://github.com/mmcclenn) - University of Wisconsin - Madison
+* [John Wieczorek](http://github.com/tucotuco) - Information Architect, University of California, Berkeley
 
 ## Description
 
 Mapping the Neotoma Database structure onto DarwinCore standards is relatively complex.  While some of the data structure maps easily, the content of the database, and the conceptual structure of the paleoecological records is not consistently equivalent to the semantic structure of the DarwinCore schema.  The `Rmd` has some simple relationships described in the markdown portion of the document, based on a cross-walk started by Michael McLennan, and extended by Jack Williams and Mark Uhen at the Cyber4Paleo Community Development Workshop.  Simon Goring developed this `Rmd` and implemented the actual conversion of the database structure to the csv file output.
 
-The database itself is available as a SQL Server snapshot from the Neotoma Paleoecological Database's website [here](http://www.neotomadb.org/snapshots), or on [fighsare.org]() at the Neotoma Database Snapshot project [here](https://figshare.com/authors/Data_Backup_Neotoma_Paleoecological_Database/2741398).
+The database itself is available as a SQL Server snapshot from the Neotoma Paleoecological Database's website [here](http://www.neotomadb.org/snapshots), or on [figshare.org]() at the Neotoma Database Snapshot project [here](https://figshare.com/authors/Data_Backup_Neotoma_Paleoecological_Database/2741398).
