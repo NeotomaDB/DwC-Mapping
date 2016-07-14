@@ -36,224 +36,224 @@ table tr th :last-child, table tr td :last-child {
 
 ## Record Level Terms
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| `"Dataset"` | dcterms:type | |
-| Dataset + modification | dcterms:modified | |
-| `"English"`  | dcterms:language |  |
-| [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/deed.en_US) | dcterms:license | |
-| `Contacts:ContactName` | dcterms:rightsHolder | A person or organization owning or managing rights over the resource. |
-| | dcterms:accessRights | Information about who can access the resource or an indication of its security status. |
-| [Data citation from papers?] | dcterms:bibliographicCitation | A bibliographic reference for the resource. |
-| year from submission date | gbif:year | |
-| | dcterms:references | A related resource that is referenced, cited, or otherwise pointed to by the described resource. |
-| IGSNs for samples? | institutionID | An identifier for the institution having custody of the object(s) or information referred to in the record. |
-| `AnalysisUnitID:AnalysisUnits`| collectionID | An identifier for the collection or dataset from which the record was derived. |
-| `DatasetID:Datasets` | datasetID | |
-| `RepositoryInstitutions:Acronym` | institutionCode | The name (or acronym) in use by the institution having custody of the object(s) or information referred to in the record. |
-| | collectionCode | |
-| `"Neotoma Dataset *n*"` | datasetName | |
-| | ownerInstitutionCode | |
-| | basisOfRecord | The specific nature of the data record. |
-| | informationWithheld | Additional information that exists, but that has not been shared in the given record. |
-| | dataGeneralizations | Actions taken to make the shared data less specific or complete than in its original form. Suggests that alternative data of higher quality may be available on request. |
-| | dynamicProperties | 	A list of additional measurements, facts, characteristics, or assertions about the record. Meant to provide a mechanism for structured content. JSON structured: "{"thing":value}" |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+| * | `"Dataset"` | dcterms:type | |
+| * | Dataset + modification | dcterms:modified | |
+| * | `"English"`  | dcterms:language |  |
+| * | [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/deed.en_US) | dcterms:license | |
+| * | `Contacts:ContactName` | dcterms:rightsHolder | A person or organization owning or managing rights over the resource. |
+|   | | dcterms:accessRights | Information about who can access the resource or an indication of its security status. |
+| * | [Data citation from papers?] | dcterms:bibliographicCitation | A bibliographic reference for the resource. |
+| * | submission date | gbif:year | |
+|  | | dcterms:references | A related resource that is referenced, cited, or otherwise pointed to by the described resource. |
+|   | IGSNs for samples? | institutionID | An identifier for the institution having custody of the object(s) or information referred to in the record. |
+| * | `AnalysisUnitID:AnalysisUnits`| collectionID | An identifier for the collection or dataset from which the record was derived. |
+| * | `DatasetID:Datasets` | datasetID | |
+|   | `RepositoryInstitutions:Acronym` | institutionCode | The name (or acronym) in use by the institution having custody of the object(s) or information referred to in the record. |
+|  | | collectionCode | |
+| * | `"Neotoma Dataset *n*"` | datasetName | |
+|  | | ownerInstitutionCode | |
+|  | | basisOfRecord | The specific nature of the data record. |
+|  | | informationWithheld | Additional information that exists, but that has not been shared in the given record. |
+|  | | dataGeneralizations | Actions taken to make the shared data less specific or complete than in its original form. Suggests that alternative data of higher quality may be available on request. |
+|  | | dynamicProperties | 	A list of additional measurements, facts, characteristics, or assertions about the record. Meant to provide a mechanism for structured content. JSON structured: "{"thing":value}" |
 
 ## Organism
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| `AnalysisUnits:AnalysisUnitID` + `TaxonID` | occurrenceID | |
-| | catalogNumber | |
-| | recordNumber | |
-| `DatasetPI` or `Contacts:ContactName` | recordedBy | Could also be the dataset PI |
-| | individualCount | |
-| | organismQuantity | |
-| | organismQuantityType | |
-| | sex | |
-| | lifeStage | |
-| | reproductiveCondition | |
-| | behavior | |
-| | establishmentMeans | |
-| `present` | occurrenceStatus | A statement about the presence or absence of a Taxon at a Location. Recommended best practice is to use a controlled vocabulary. |
-| | preparations | |
-| | disposition | |
-| | associatedMedia | |
-| ``Publications:Citation` pipe separated | associatedReferences | |
-| | associatedSequences | |
-| `"cooccurrs with: "` | associatedTaxa | A list (concatenated and separated) of identifiers or names of taxa and their associations with the Occurrence. |
-| | otherCatalogNumbers | |
-| Compound `VariableElement:VariableElements`, `Data:Value`, `VariableUnits:VariableUnit` | occurrenceRemarks | Comments or notes about the Occurrence. |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+| * | `AnalysisUnits:AnalysisUnitID` + `TaxonID` | occurrenceID | |
+|  | | catalogNumber | |
+|  | | recordNumber | |
+| * | `DatasetPI` or `Contacts:ContactName` | recordedBy | Could also be the dataset PI |
+|  | Pollen grains are not individuals, could work with `MNI` counts | individualCount | |
+|  | | organismQuantity | |
+|  | | organismQuantityType | |
+|  | | sex | |
+|  | | lifeStage | |
+|  | | reproductiveCondition | |
+|  | | behavior | |
+|  | | establishmentMeans | |
+| * | `present` | occurrenceStatus | A statement about the presence or absence of a Taxon at a Location. Recommended best practice is to use a controlled vocabulary. |
+|  | | preparations | |
+|  | | disposition | |
+|  | | associatedMedia | |
+| * | ``Publications:Citation` pipe separated | associatedReferences | |
+|  | | associatedSequences | |
+| * | `"cooccurrs with: "` | associatedTaxa | A list (concatenated and separated) of identifiers or names of taxa and their associations with the Occurrence. |
+|  | | otherCatalogNumbers | |
+|  |  | occurrenceRemarks | Comments or notes about the Occurrence. |
 
 ## Organism
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| | organismID | |
-| | organismName | | 
-| | organismScope |  |
-| Same as `associatedTaxa`, but with Occurrence IDs |  associatedOccurrences | A list (concatenated and separated) of identifiers of other Occurrence records and their associations to this Occurrence. |
-| |  associatedOrganisms | A list (concatenated and separated) of identifiers of other Organisms and their associations to this Organism. |
-| |  previousIdentifications | |
-| |  organismRemarks | |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+|  | | organismID | |
+|  | | organismName | | 
+|  | | organismScope |  |
+| * | Same as `associatedTaxa`, but with Occurrence IDs |  associatedOccurrences | A list (concatenated and separated) of identifiers of other Occurrence records and their associations to this Occurrence. |
+|  | |  associatedOrganisms | A list (concatenated and separated) of identifiers of other Organisms and their associations to this Organism. |
+|  | |  previousIdentifications | |
+|  | |  organismRemarks | |
 
 ## MaterialSample, LivingSpecimen, PreservedSpecimen, FossilSpecimen
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| IGSN | materialSampleID | | 
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+|  | IGSN | materialSampleID | | 
 
 ## Event, HumanObservation, MachineObservation
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| `AnalysisUnitID` | eventID | |
-| `CollectionUnitID` | parentEventID | |
-| | fieldNumber | |
-| `CollectionUnits:CollDate` | eventDate | The date-time or interval during which an Event occurred. | 
-| | eventTime | |
-| `1` | startDayOfYear | |
-| `365` or `366`| endDayOfYear |  |
-| get year from `CollectionUnits:CollDate` | year | |
-| get month from `CollectionUnits:CollDate` | month | |
-| get day from `CollectionUnits:CollDate` | day | |
-| | verbatimEventDate | |
-| | habitat | |
-| `Datasets:datasettype` | samplingProtocol | |
-| `Data:value` | sampleSizeValue | |
-| `VariableUnits:VariableUnit` | sampleSizeUnit | |
-| Total count for the analysis unit | samplingEffort | |
-| | fieldNotes | One of a) an indicator of the existence of, b) a reference to (publication, URI), or c) the text of notes taken in the field about the Event. |
-| `CollectionUnits:Notes` | eventRemarks | |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+| * | `AnalysisUnitID` | eventID | |
+| * | `CollectionUnitID` | parentEventID | |
+|  | | fieldNumber | |
+| * | `CollectionUnits:CollDate` | eventDate | The date-time or interval during which an Event occurred. | 
+|  | | eventTime | |
+| * | `1` | startDayOfYear | |
+| * | `365` or `366`| endDayOfYear |  |
+| * | get year from `CollectionUnits:CollDate` | year | |
+| * | get month from `CollectionUnits:CollDate` | month | |
+| * | get day from `CollectionUnits:CollDate` | day | |
+|  | | verbatimEventDate | |
+|  | | habitat | |
+| * | `Datasets:datasettype` | samplingProtocol | |
+| * | `Data:value` | sampleSizeValue | |
+| * | `VariableUnits:VariableUnit` | sampleSizeUnit | |
+|  | Total count for the analysis unit | samplingEffort | |
+| | | fieldNotes | One of a) an indicator of the existence of, b) a reference to (publication, URI), or c) the text of notes taken in the field about the Event. |
+| * | `CollectionUnits:Notes` | eventRemarks | |
 
 ## Location
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| | locationID | | 
-| `GeopoliticalUnits` | higherGeographyID | | 
-| `GeopoliticalUnits` | higherGeography | | 
-| | continent | | 
-| | waterBody | | 
-| | islandGroup | | 
-| | island | | 
-| `GeoPoliticalUnits:GeoPoliticalName` | country | |
-| `GeopoliticalUnits` | countryCode | |
-| `GeopoliticalUnits` | stateProvince | | 
-| | county | | 
-| | municipality | | 
-| | locality | | 
-| | verbatimLocality | | 
-| `Sites:Altitude` | minimumElevationInMeters | | 
-| `Sites:Altitude` | maximumElevationInMeters | | 
-| | verbatimElevation | | 
-| | minimumDepthInMeters | | 
-| | maximumDepthInMeters | | 
-| | verbatimDepth | | 
-| | minimumDistanceAboveSurfaceInMeters | | 
-| | maximumDistanceAboveSurfaceInMeters | | 
-| | locationAccordingTo | | 
-| `Sites:SiteDescription` | locationRemarks | |
-| `Sites:LongitudeEast` | decimalLatitude | |
-| `Sites:LatitudeNorth` | decimalLongitude | |
-| `EPSG:4326` | geodeticDatum | |
-| | coordinateUncertaintyInMeters | |
-| `max(c(Sites:LongitudeEast - Sites:LongitudeWest,` \n `Sites:LatitudeNorth - Sites:LatitudeSouth))` | | coordinatePrecision | A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude. |
-| | pointRadiusSpatialFit | |
-| | verbatimCoordinates | |
-| | verbatimLatitude | |
-| | verbatimLongitude | |
-| | verbatimCoordinateSystem | |
-| | verbatimSRS | |
-| e.g., `POLYGON ((10 20, 11 20, 11 21, 10 21, 10 20))` | footprintWKT | |
-| `EPSG:4326` | footprintSRS | |
-| | footprintSpatialFit | |
-| `DatasetPI` | georeferencedBy | |
-| | georeferencedDate | |
-| | georeferenceProtocol | |
-| | georeferenceSources | |
-| | georeferenceVerificationStatus | |
-| | georeferenceRemarks | |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+|  | | locationID | | 
+| * | `GeopoliticalUnits` | higherGeographyID | | 
+| * | `GeopoliticalUnits` | higherGeography | | 
+|  | | continent | | 
+|  | | waterBody | | 
+|  | | islandGroup | | 
+|  | | island | | 
+| * | `GeoPoliticalUnits:GeoPoliticalName` | country | |
+| * | `GeopoliticalUnits` | countryCode | |
+| * | `GeopoliticalUnits` | stateProvince | | 
+|  | | county | | 
+|  | | municipality | | 
+|  | | locality | | 
+|  | | verbatimLocality | | 
+|  | `Sites:Altitude` | minimumElevationInMeters | | 
+|  | `Sites:Altitude` | maximumElevationInMeters | | 
+|  | | verbatimElevation | | 
+|  | | minimumDepthInMeters | | 
+|  | | maximumDepthInMeters | | 
+|  | | verbatimDepth | | 
+|  | | minimumDistanceAboveSurfaceInMeters | | 
+|  | | maximumDistanceAboveSurfaceInMeters | | 
+|  | | locationAccordingTo | | 
+| * | `Sites:SiteDescription` | locationRemarks | |
+| * | `Sites:LongitudeEast` | decimalLatitude | |
+| * | `Sites:LatitudeNorth` | decimalLongitude | |
+| * | `EPSG:4326` | geodeticDatum | |
+|  | | coordinateUncertaintyInMeters | |
+| * | `max(c(Sites:LongitudeEast - Sites:LongitudeWest,` \n `Sites:LatitudeNorth - Sites:LatitudeSouth))` | | coordinatePrecision | A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude. |
+|  | | pointRadiusSpatialFit | |
+|  | | verbatimCoordinates | |
+|  | | verbatimLatitude | |
+|  | | verbatimLongitude | |
+|  | | verbatimCoordinateSystem | |
+|  | | verbatimSRS | |
+| * | e.g., `POLYGON ((10 20, 11 20, 11 21, 10 21, 10 20))` | footprintWKT | |
+| * | `EPSG:4326` | footprintSRS | |
+|  | | footprintSpatialFit | |
+| * | `DatasetPI` | georeferencedBy | |
+|  | | georeferencedDate | |
+|  | | georeferenceProtocol | |
+|  | | georeferenceSources | |
+|  | | georeferenceVerificationStatus | |
+|  | | georeferenceRemarks | |
 
 ## GeologicalContext
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| | geologicalContextID | |
-| `"Phanerozoic"` | earliestEonOrLowestEonothem | |
-| `"Phanerozoic"` | latestEonOrHighestEonothem | |
-| `"Cenozoic"` | earliestEraOrLowestErathem | |
-| `"Cenozoic"` | latestEraOrHighestErathem | |
-| `"Quaternary"` - but check | earliestPeriodOrLowestSystem | | 
-| `"Quaternary"` - but check | latestPeriodOrHighestSystem | |
-| `"Holocene"` or `"Pleistocene"` - but check | earliestEpochOrLowestSeries | |
-| `"Holocene"` or `"Pleistocene"` - but check | latestEpochOrHighestSeries | |
-| `RelativeAges:CalAgeOlder` \n or `SampleAges:CalAgeOlder` | earliestAgeOrLowestStage | |
-| `RelativeAges:CalAgeYounger` \n or `SampleAges:CalAgeYounger` | latestAgeOrHighestStage | The full name of the latest possible geochronologic age or highest chronostratigraphic stage attributable to the stratigraphic horizon from which the cataloged item was collected. |
-| | lowestBiostratigraphicZone | |
-| | highestBiostratigraphicZone | |
-| `Lithology:Description` | lithostratigraphicTerms | |
-| | group | |
-| | formation | |
-| | member | |
-| | bed | |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+|  | | geologicalContextID | |
+| * | `"Phanerozoic"` | earliestEonOrLowestEonothem | |
+| * | `"Phanerozoic"` | latestEonOrHighestEonothem | |
+| * | `"Cenozoic"` | earliestEraOrLowestErathem | |
+| * | `"Cenozoic"` | latestEraOrHighestErathem | |
+| * | `"Quaternary"` - but check | earliestPeriodOrLowestSystem | | 
+| * | `"Quaternary"` - but check | latestPeriodOrHighestSystem | |
+| * | `"Holocene"` or `"Pleistocene"` - but check | earliestEpochOrLowestSeries | |
+| * | `"Holocene"` or `"Pleistocene"` - but check | latestEpochOrHighestSeries | |
+| * | Ages in the Holocene are geographically constrained, but we have relative ages. | earliestAgeOrLowestStage | |
+| * | Ages in the Holocene are geographically constrained, but we have relative ages. | latestAgeOrHighestStage | The full name of the latest possible geochronologic age or highest chronostratigraphic stage attributable to the stratigraphic horizon from which the cataloged item was collected. |
+|  | | lowestBiostratigraphicZone | |
+|  | | highestBiostratigraphicZone | |
+|  | `Lithology:Description` | lithostratigraphicTerms |  **Note**: This is complicated, you need to find depth & lithographic terms.|
+|  | | group | |
+|  | | formation | |
+|  | | member | |
+|  | | bed | |
 
 ## Identification
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| | identificationID | |
-| regex search for key qualifiers | identificationQualifier | A brief phrase or a standard term ("cf.", "aff.") to express the determiner's doubts about the Identification. |
-| | typeStatus | |
-| `DatasetPI` | identifiedBy | |
-| | dateIdentified | |
-| | identificationReferences | |
-| | identificationVerificationStatus | |
-| | identificationRemarks | |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+|  | | identificationID | |
+|  | regex search for key qualifiers (*e.g.*, ?, cf, type) | identificationQualifier | A brief phrase or a standard term ("cf.", "aff.") to express the determiner's doubts about the Identification. |
+|  | | typeStatus | |
+| * | `DatasetPI` | identifiedBy | |
+|  | | dateIdentified | |
+|  | | identificationReferences | |
+|  | | identificationVerificationStatus | |
+|  | | identificationRemarks | |
 
 ## Taxon
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
-| | taxonID | An identifier for the set of taxon information (data associated with the Taxon class). May be a global unique identifier or an identifier specific to the data set. |
-| `Taxa:TaxonID` | scientificNameID | An identifier for the nomenclatural (not taxonomic) details of a scientific name. |
-| | acceptedNameUsageID | |
-| | parentNameUsageID | |
-| | originalNameUsageID | |
-| | nameAccordingToID | |
-| `Taxa:PublicationID` | namePublishedInID | |
-| | taxonConceptID | |
-| `Taxa:TaxonName` | scientificName | The full scientific name, with authorship and date information if known. When forming part of an Identification, this should be the name in lowest level taxonomic rank that can be determined. This term should not contain identification qualifications, which should instead be supplied in the identificationQualifier term. |
-| | acceptedNameUsage | |
-| | parentNameUsage | |
-| | originalNameUsage | |
-| | nameAccordingTo | | 
-| | namePublishedIn | | 
-| | namePublishedInYear | | 
-| | higherClassification | | 
-| | kingdom | | 
-| | phylum | | 
-| | class | | 
-| | order | |
-| | family | |
-| | genus | | 
-| | subgenus | | 
-| | specificEpithet | |  
-| | infraspecificEpithet | | 
-| | taxonRank | | 
-| | verbatimTaxonRank | | 
-| `Taxa:Author` | scientificNameAuthorship | The authorship information for the scientificName formatted according to the conventions of the applicable nomenclaturalCode. |
-| |  vernacularName | | 
-| | nomenclaturalCode | | 
-| | taxonomicStatus | | 
-| | nomenclaturalStatus | | 
-| | taxonRemarks | | 
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
+|  | | taxonID | An identifier for the set of taxon information (data associated with the Taxon class). May be a global unique identifier or an identifier specific to the data set. |
+|  | `Taxa:TaxonID` | scientificNameID | An identifier for the nomenclatural (not taxonomic) details of a scientific name. |
+|  | | acceptedNameUsageID | |
+|  | | parentNameUsageID | |
+|  | | originalNameUsageID | |
+|  | | nameAccordingToID | |
+| * | `Taxa:PublicationID` | namePublishedInID | |
+|  | | taxonConceptID | |
+| * | `Taxa:TaxonName` | scientificName | The full scientific name, with authorship and date information if known. When forming part of an Identification, this should be the name in lowest level taxonomic rank that can be determined. This term should not contain identification qualifications, which should instead be supplied in the identificationQualifier term. |
+|  | | acceptedNameUsage | |
+|  | | parentNameUsage | |
+|  | | originalNameUsage | |
+|  | | nameAccordingTo | | 
+|  | | namePublishedIn | | 
+|  | | namePublishedInYear | | 
+|  | | higherClassification | | 
+|  | | kingdom | |
+|  | | phylum | | 
+|  | | class | | 
+|  | | order | |
+|  | | family | |
+|  | | genus | | 
+|  | | subgenus | | 
+|  | | specificEpithet | |  
+|  | | infraspecificEpithet | | 
+|  | | taxonRank | | 
+|  | | verbatimTaxonRank | | 
+| * | `Taxa:Author` | scientificNameAuthorship | The authorship information for the scientificName formatted according to the conventions of the applicable nomenclaturalCode. |
+|  | |  vernacularName | | 
+|  | | nomenclaturalCode | | 
+|  | | taxonomicStatus | | 
+|  | | nomenclaturalStatus | | 
+|  | | taxonRemarks | | 
 
 ## Auxiliary Terms
 ### MeasurementOrFact
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
 | | measurementID | | 
 | | measurementType | | 
 | | measurementValue | | 
@@ -266,8 +266,8 @@ table tr th :last-child, table tr td :last-child {
 
 ### ResourceRelationship
 
-| Neotoma | DarwinCore | Description |
-| ------- | ---------- | ---------- |
+| Implemented | Neotoma | DarwinCore | Description |
+| ----------- | ------- | ---------- | ---------- |
 | | resourceRelationshipID | | 
 | | resourceID | | 
 | | relatedResourceID | | 
@@ -405,7 +405,6 @@ output <-  data.frame("dcterms:type"         = query_out$`dcterms:type`,
                       eventRemarks           = query_out$eventRemarks,
                       minimumElevationInMeters = query_out$altitude,
                       maximumElevationInMeters = query_out$altitude,
-                      locationRemarks        = query_out$locationRemarks,
                       decimalLatitude        = mean(c(query_out$latN,
                                                       query_out$latS)),
                       decimalLongitude       = mean(c(query_out$lonE,
