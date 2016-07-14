@@ -1,0 +1,14 @@
+Period,Epoch,Age,Start,End
+Quaternary,Holocene,,0.01,-0.001
+Quaternary,Pleistocene,Late,0.13,0.01
+Quaternary,Pleistocene,Middle,0.78,0.13
+Quaternary,Pleistocene,Calabrian,1.8,0.78
+Quaternary,Pleistocene,Gelasian,2.6,1.8
+Neogene,Pliocene,Piacenzian,3.6,2.6
+Neogene,Pliocene,Zanclean,5.3,3.6
+Neogene,Miocene,Messinian,7.2,5.3
+Neogene,Miocene,Tortonian,11.6,7.2
+Neogene,Miocene,Serravallian,13.8,11.6
+Neogene,Miocene,Langhian,16,13.8
+Neogene,Miocene,Burdigalian,20.4,16
+Neogene,Miocene,Aquitanian,23,20.4

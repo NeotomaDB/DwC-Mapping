@@ -1,0 +1,489 @@
+---
+title: "DarwnCore Alignment"
+author: "Simon Goring, Jack Williams, Mark Uhen, Michael McLennan"
+date: "July 10, 2016"
+output: word_document
+---
+
+<style type="text/css">
+table {
+   padding: 0;border-collapse: collapse; 
+   layout: fixed; 
+   width: 100%; }
+table tr {
+   border-top: 1px solid #cccccc;
+   background-color: white;
+   margin: 0;
+   padding: 0; }
+table tr:nth-child(2n) {
+   background-color: #f8f8f8; }
+table tr th {
+   font-weight: bold;
+   border: 1px solid #cccccc;
+   margin: 0;
+   padding: 6px 13px; }
+table tr td {
+   border: 1px solid #cccccc;
+   margin: 0;
+   padding: 6px 13px; }
+table tr th :first-child, table tr td :first-child {
+   margin-top: 0; }
+table tr th :last-child, table tr td :last-child {
+   margin-bottom: 0; }
+</style>
+
+# DwC Alignment:
+
+## Record Level Terms
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| `"Dataset"` | dcterms:type | |
+| Dataset + modification | dcterms:modified | |
+| `"English"`  | dcterms:language |  |
+| [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/deed.en_US) | dcterms:license | |
+| `Contacts:ContactName` | dcterms:rightsHolder | A person or organization owning or managing rights over the resource. |
+| | dcterms:accessRights | Information about who can access the resource or an indication of its security status. |
+| [Data citation from papers?] | dcterms:bibliographicCitation | A bibliographic reference for the resource. |
+| year from submission date | gbif:year | |
+| | dcterms:references | A related resource that is referenced, cited, or otherwise pointed to by the described resource. |
+| IGSNs for samples? | institutionID | An identifier for the institution having custody of the object(s) or information referred to in the record. |
+| `AnalysisUnitID:AnalysisUnits`| collectionID | An identifier for the collection or dataset from which the record was derived. |
+| `DatasetID:Datasets` | datasetID | |
+| `RepositoryInstitutions:Acronym` | institutionCode | The name (or acronym) in use by the institution having custody of the object(s) or information referred to in the record. |
+| | collectionCode | |
+| `"Neotoma Dataset *n*"` | datasetName | |
+| | ownerInstitutionCode | |
+| | basisOfRecord | The specific nature of the data record. |
+| | informationWithheld | Additional information that exists, but that has not been shared in the given record. |
+| | dataGeneralizations | Actions taken to make the shared data less specific or complete than in its original form. Suggests that alternative data of higher quality may be available on request. |
+| | dynamicProperties | 	A list of additional measurements, facts, characteristics, or assertions about the record. Meant to provide a mechanism for structured content. JSON structured: "{"thing":value}" |
+
+## Organism
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| `AnalysisUnits:AnalysisUnitID` + `TaxonID` | occurrenceID | |
+| | catalogNumber | |
+| | recordNumber | |
+| `DatasetPI` or `Contacts:ContactName` | recordedBy | Could also be the dataset PI |
+| | individualCount | |
+| | organismQuantity | |
+| | organismQuantityType | |
+| | sex | |
+| | lifeStage | |
+| | reproductiveCondition | |
+| | behavior | |
+| | establishmentMeans | |
+| `present` | occurrenceStatus | A statement about the presence or absence of a Taxon at a Location. Recommended best practice is to use a controlled vocabulary. |
+| | preparations | |
+| | disposition | |
+| | associatedMedia | |
+| ``Publications:Citation` pipe separated | associatedReferences | |
+| | associatedSequences | |
+| `"cooccurrs with: "` | associatedTaxa | A list (concatenated and separated) of identifiers or names of taxa and their associations with the Occurrence. |
+| | otherCatalogNumbers | |
+| Compound `VariableElement:VariableElements`, `Data:Value`, `VariableUnits:VariableUnit` | occurrenceRemarks | Comments or notes about the Occurrence. |
+
+## Organism
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| | organismID | |
+| | organismName | | 
+| | organismScope |  |
+| Same as `associatedTaxa`, but with Occurrence IDs |  associatedOccurrences | A list (concatenated and separated) of identifiers of other Occurrence records and their associations to this Occurrence. |
+| |  associatedOrganisms | A list (concatenated and separated) of identifiers of other Organisms and their associations to this Organism. |
+| |  previousIdentifications | |
+| |  organismRemarks | |
+
+## MaterialSample, LivingSpecimen, PreservedSpecimen, FossilSpecimen
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| IGSN | materialSampleID | | 
+
+## Event, HumanObservation, MachineObservation
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| `AnalysisUnitID` | eventID | |
+| `CollectionUnitID` | parentEventID | |
+| | fieldNumber | |
+| `CollectionUnits:CollDate` | eventDate | The date-time or interval during which an Event occurred. | 
+| | eventTime | |
+| `1` | startDayOfYear | |
+| `365` or `366`| endDayOfYear |  |
+| get year from `CollectionUnits:CollDate` | year | |
+| get month from `CollectionUnits:CollDate` | month | |
+| get day from `CollectionUnits:CollDate` | day | |
+| | verbatimEventDate | |
+| | habitat | |
+| `Datasets:datasettype` | samplingProtocol | |
+| `Data:value` | sampleSizeValue | |
+| `VariableUnits:VariableUnit` | sampleSizeUnit | |
+| Total count for the analysis unit | samplingEffort | |
+| | fieldNotes | One of a) an indicator of the existence of, b) a reference to (publication, URI), or c) the text of notes taken in the field about the Event. |
+| `CollectionUnits:Notes` | eventRemarks | |
+
+## Location
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| | locationID | | 
+| `GeopoliticalUnits` | higherGeographyID | | 
+| `GeopoliticalUnits` | higherGeography | | 
+| | continent | | 
+| | waterBody | | 
+| | islandGroup | | 
+| | island | | 
+| `GeoPoliticalUnits:GeoPoliticalName` | country | |
+| `GeopoliticalUnits` | countryCode | |
+| `GeopoliticalUnits` | stateProvince | | 
+| | county | | 
+| | municipality | | 
+| | locality | | 
+| | verbatimLocality | | 
+| `Sites:Altitude` | minimumElevationInMeters | | 
+| `Sites:Altitude` | maximumElevationInMeters | | 
+| | verbatimElevation | | 
+| | minimumDepthInMeters | | 
+| | maximumDepthInMeters | | 
+| | verbatimDepth | | 
+| | minimumDistanceAboveSurfaceInMeters | | 
+| | maximumDistanceAboveSurfaceInMeters | | 
+| | locationAccordingTo | | 
+| `Sites:SiteDescription` | locationRemarks | |
+| `Sites:LongitudeEast` | decimalLatitude | |
+| `Sites:LatitudeNorth` | decimalLongitude | |
+| `EPSG:4326` | geodeticDatum | |
+| | coordinateUncertaintyInMeters | |
+| `max(c(Sites:LongitudeEast - Sites:LongitudeWest,` \n `Sites:LatitudeNorth - Sites:LatitudeSouth))` | | coordinatePrecision | A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude. |
+| | pointRadiusSpatialFit | |
+| | verbatimCoordinates | |
+| | verbatimLatitude | |
+| | verbatimLongitude | |
+| | verbatimCoordinateSystem | |
+| | verbatimSRS | |
+| e.g., `POLYGON ((10 20, 11 20, 11 21, 10 21, 10 20))` | footprintWKT | |
+| `EPSG:4326` | footprintSRS | |
+| | footprintSpatialFit | |
+| `DatasetPI` | georeferencedBy | |
+| | georeferencedDate | |
+| | georeferenceProtocol | |
+| | georeferenceSources | |
+| | georeferenceVerificationStatus | |
+| | georeferenceRemarks | |
+
+## GeologicalContext
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| | geologicalContextID | |
+| `"Phanerozoic"` | earliestEonOrLowestEonothem | |
+| `"Phanerozoic"` | latestEonOrHighestEonothem | |
+| `"Cenozoic"` | earliestEraOrLowestErathem | |
+| `"Cenozoic"` | latestEraOrHighestErathem | |
+| `"Quaternary"` - but check | earliestPeriodOrLowestSystem | | 
+| `"Quaternary"` - but check | latestPeriodOrHighestSystem | |
+| `"Holocene"` or `"Pleistocene"` - but check | earliestEpochOrLowestSeries | |
+| `"Holocene"` or `"Pleistocene"` - but check | latestEpochOrHighestSeries | |
+| `RelativeAges:CalAgeOlder` \n or `SampleAges:CalAgeOlder` | earliestAgeOrLowestStage | |
+| `RelativeAges:CalAgeYounger` \n or `SampleAges:CalAgeYounger` | latestAgeOrHighestStage | The full name of the latest possible geochronologic age or highest chronostratigraphic stage attributable to the stratigraphic horizon from which the cataloged item was collected. |
+| | lowestBiostratigraphicZone | |
+| | highestBiostratigraphicZone | |
+| `Lithology:Description` | lithostratigraphicTerms | |
+| | group | |
+| | formation | |
+| | member | |
+| | bed | |
+
+## Identification
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| | identificationID | |
+| regex search for key qualifiers | identificationQualifier | A brief phrase or a standard term ("cf.", "aff.") to express the determiner's doubts about the Identification. |
+| | typeStatus | |
+| `DatasetPI` | identifiedBy | |
+| | dateIdentified | |
+| | identificationReferences | |
+| | identificationVerificationStatus | |
+| | identificationRemarks | |
+
+## Taxon
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| | taxonID | An identifier for the set of taxon information (data associated with the Taxon class). May be a global unique identifier or an identifier specific to the data set. |
+| `Taxa:TaxonID` | scientificNameID | An identifier for the nomenclatural (not taxonomic) details of a scientific name. |
+| | acceptedNameUsageID | |
+| | parentNameUsageID | |
+| | originalNameUsageID | |
+| | nameAccordingToID | |
+| `Taxa:PublicationID` | namePublishedInID | |
+| | taxonConceptID | |
+| `Taxa:TaxonName` | scientificName | The full scientific name, with authorship and date information if known. When forming part of an Identification, this should be the name in lowest level taxonomic rank that can be determined. This term should not contain identification qualifications, which should instead be supplied in the identificationQualifier term. |
+| | acceptedNameUsage | |
+| | parentNameUsage | |
+| | originalNameUsage | |
+| | nameAccordingTo | | 
+| | namePublishedIn | | 
+| | namePublishedInYear | | 
+| | higherClassification | | 
+| | kingdom | | 
+| | phylum | | 
+| | class | | 
+| | order | |
+| | family | |
+| | genus | | 
+| | subgenus | | 
+| | specificEpithet | |  
+| | infraspecificEpithet | | 
+| | taxonRank | | 
+| | verbatimTaxonRank | | 
+| `Taxa:Author` | scientificNameAuthorship | The authorship information for the scientificName formatted according to the conventions of the applicable nomenclaturalCode. |
+| |  vernacularName | | 
+| | nomenclaturalCode | | 
+| | taxonomicStatus | | 
+| | nomenclaturalStatus | | 
+| | taxonRemarks | | 
+
+## Auxiliary Terms
+### MeasurementOrFact
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| | measurementID | | 
+| | measurementType | | 
+| | measurementValue | | 
+| | measurementAccuracy | | 
+| | measurementUnit | | 
+| | measurementDeterminedBy | | 
+| | measurementDeterminedDate | | 
+| | measurementMethod | | 
+| | measurementRemarks| | 
+
+### ResourceRelationship
+
+| Neotoma | DarwinCore | Description |
+| ------- | ---------- | ---------- |
+| | resourceRelationshipID | | 
+| | resourceID | | 
+| | relatedResourceID | | 
+| | relationshipOfResource | | 
+| | relationshipAccordingTo | | 
+| | relationshipEstablishedDate | | 
+| | relationshipRemarks| | 
+
+
+
+```r
+
+# DarwinCore schema, if we want to validate ourselves with XML:
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://rs.tdwg.org/dwc/terms/"
+    xmlns:dwc="http://rs.tdwg.org/dwc/terms/">
+```
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(RODBC, quietly = TRUE, verbose = FALSE)
+
+con <- odbcDriverConnect('driver={SQL Server};server=SIMONGORING-PC\\SQLEXPRESS;database=Neotoma;trusted_connection=true')
+```
+
+```{r, eval = FALSE}
+# Do this by dataset (I think this makes more sense)
+dataset <- 1001
+
+# For each dataset, get all the analysis units:
+query_out <- sqlQuery(con, 
+query = paste0("SELECT        'dataset' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, cu.CollDate AS eventDate, cnt.ContactName, 
+                         data.Value AS sampleSizeValue, au.AnalysisUnitID AS eventID, cu.CollectionUnitID AS parentEventID, taxa_1.TaxonID, taxa_1.TaxonName AS scientificName, taxa_1.Author AS scientificNameAuthorship, 
+                         dst.DatasetType AS samplingProtocol, cu.Notes AS eventRemarks, varu.VariableUnits AS sampleSizeUnit, sts.SiteID AS siteid, sts.Altitude AS altitude, sts.SiteDescription AS locationRemarks, 
+                         sts.SiteName AS siteName, sts.SiteDescription AS siteDescription, sts.SiteName AS Expr1, sts.LongitudeEast AS lonE, sts.LongitudeWest AS lonW, sts.LatitudeNorth AS latN, sts.LatitudeSouth AS latS, 
+                         sage.Age AS age, sage.AgeYounger AS ageYounger, sage.AgeOlder AS ageOlder
+FROM            NDB.Datasets AS ds INNER JOIN
+                         NDB.Samples AS smp ON smp.DatasetID = ds.DatasetID INNER JOIN
+                         NDB.CollectionUnits AS cu ON cu.CollectionUnitID = ds.CollectionUnitID INNER JOIN
+                         NDB.DatasetPIs AS dpi ON dpi.DatasetID = ds.DatasetID INNER JOIN
+                         NDB.Contacts AS cnt ON cnt.ContactID = dpi.ContactID INNER JOIN
+                         NDB.AnalysisUnits AS au ON au.AnalysisUnitID = smp.AnalysisUnitID INNER JOIN
+                         NDB.Data AS data ON smp.SampleID = data.SampleID INNER JOIN
+                         NDB.Variables AS vari ON data.VariableID = vari.VariableID INNER JOIN
+                         NDB.VariableUnits AS varu ON vari.VariableUnitsID = varu.VariableUnitsID INNER JOIN
+                             (SELECT        TaxonID, TaxonCode, TaxonName, Author, Valid, HigherTaxonID, Extinct, TaxaGroupID, PublicationID, ValidatorID, ValidateDate, Notes, RecDateCreated, RecDateModified
+                               FROM            NDB.Taxa AS Taxa
+                               WHERE        (TaxaGroupID <> 'LAB')) AS taxa_1 ON vari.TaxonID = taxa_1.TaxonID INNER JOIN
+                         NDB.DatasetTypes AS dst ON ds.DatasetTypeID = dst.DatasetTypeID INNER JOIN
+                         NDB.Sites AS sts ON cu.SiteID = sts.SiteID INNER JOIN
+                         NDB.SampleAges AS sage ON smp.SampleID = sage.SampleID
+WHERE        (ds.DatasetID = ",dataset,")"), stringsAsFactors = FALSE)
+
+# This should tell us whether or not the collection year was a leap year.  Unfortunately, many records
+# do not have a collection date.  If this is the case, I'm not sure what we do. . . 
+eoy <- data.frame(startDayOfYear = ifelse(is.na(query_out$eventDate), NA, 1),
+                  endDayOfYear   = ifelse(as.numeric(format(as.POSIXct(query_out$eventDate), '%Y')) %% 100 %%4 == 0, 366, 365))
+
+query_out$sampleSizeUnit[query_out$sampleSizeUnit %in% 'NISP'] <- "Number of Identified Samples"
+query_out$sampleSizeUnit[query_out$sampleSizeUnit %in% 'MNI'] <- "Minimum Number of Individuals"
+
+# Find the appropriate age &cetera:
+ages <- read.csv('data/geolage.csv', stringsAsFactors=FALSE)
+age_bin <- data.frame(agePoint      = findInterval(query_out$age/1e6, ages$End),
+                      youngInterval = findInterval(query_out$ageYounger, ages$End),
+                      oldInterval   = findInterval(query_out$ageYounger, ages$End))
+
+for(i in 1:nrow(age_bin)){
+                      
+  # Assign epochs & ages numerically using the interval.  For ages with younger & older limits
+  # then go through & assign them to the age interval:
+  if(is.na(age_bin$youngInterval[i] & age_bin$oldInterval[i] & !is.na(age_bin$agePoint[i]))) {
+    age_bin$youngInterval[i] <- age_bin$oldInterval[i] <- age_bin$agePoint[i]
+  }
+  
+  age_bin$earliestPeriodOrLowestSystem[i] <- ages$Period[age_bin$oldInterval[i]]
+  age_bin$latestPeriodOrHighestSystem[i]  <- ages$Period[age_bin$youngInterval[i]]
+  age_bin$earliestEpochOrLowestSeries[i]  <- ages$Epoch[age_bin$oldInterval[i]]
+  age_bin$latestEpochOrHighestSeries[i]   <- ages$Epoch[age_bin$youngInterval[i]]
+  age_bin$earliestAgeOrLowestStage[i]     <- ages$Age[age_bin$oldInterval[i]]
+  age_bin$latestAgeOrHighestStage[i]      <- ages$Age[age_bin$youngInterval[i]]
+
+}
+
+pubs <- sqlQuery(con, paste0("SELECT STUFF((SELECT '|' + pubs.Citation ", 
+                             "FROM NDB.DatasetPublications AS dsp INNER JOIN ", 
+                             "NDB.Publications AS pubs ON ",
+                             "dsp.PublicationID = pubs.PublicationID ", 
+                             "WHERE (dsp.DatasetID = ",dataset,") ",
+                             "FOR XML PATH('')),1,1,'') AS associatedReferences"),
+                             stringsAsFactors = FALSE)[[1]]
+
+if(is.na(pubs)) {
+  # If there are no publications associated with the record, generate a
+  # "data" citation, pointing to the raw dataset:
+  pubs <- gsub('..', '.', paste0(query_out$ContactName, ". ", 
+                                 format(as.POSIXct(query_out$`gbif:year`), "%Y"), ". ",
+                                 query_out$siteName, " ", query_out$samplingProtocol, 
+                                 ' dataset. Neotoma Paleoecological Database. Dataset:', dataset),
+               fixed = TRUE)
+}
+
+output <-  data.frame("dcterms:type"         = query_out$`dcterms:type`,
+                      "dcterms:modified"     = as.Date(query_out$`dcterms:modified`),
+                      "dcterms:language"     = "English",
+                      "dcterms:license"      = "http://creativecommons.org/licenses/by/4.0/deed.en_US",
+                      "dcterms:rightsHolder" = query_out$ContactName,
+                      "dcterms:bibliographicCitation" = pubs,
+                      "gbif:year"            = format(as.POSIXct(query_out$`gbif:year`), "%Y"),
+                      #"dcterms:references"  = NA,  # link to external references
+                      locationID             = paste0("Neotoma Site: ", query_out$siteid),
+                      locality               = query_out$siteName,
+                      locationRemarks        = query_out$siteDescription,
+                      collectionID           = paste0("Neotoma Analysis Unit ", query_out$AnalysisUnitID),
+                      datasetID              = paste0("Neotoma Dataset ", dataset),
+                      #institutionCode       = NA, # I can't find the link here. . .
+                      datasetName            = paste0(query_out$siteName, " ", 
+                                                      query_out$samplingProtocol, ' dataset'),
+                      occurrenceID           = paste0('Neotoma_occ_', 
+                                                      query_out$AnalysisUnitID, '-', 
+                                                      query_out$TaxonID),
+                      recordedBy             = query_out$ContactName,
+                      occurrenceStatus       = "present",
+                      associatedReferences   = ifelse(regexpr("Neotoma Paleoecological", pubs)>-1, NA, pubs),
+                      eventID                = paste0("AnalysisUnit_",query_out$eventID),
+                      parentEventID          = paste0("CollectionUnit_",query_out$parentEventID),
+                      eventDate              = format(as.POSIXct(query_out$eventDate), '%Y-%m-%d'),
+                      startDayOfYear         = eoy$startDayOfYear,
+                      endDayOfYear           = eoy$endDayOfYear,
+                      year                   = format(as.POSIXct(query_out$eventDate), '%Y'),
+                      month                  = format(as.POSIXct(query_out$eventDate), '%m'),
+                      day                    = format(as.POSIXct(query_out$eventDate), '%d'),
+                      samplingProtocol       = paste0("Neotoma ", query_out$samplingProtocol, " dataset"),
+                      sampleSizeValue        = query_out$sampleSizeValue,
+                      sampleSizeUnit         = query_out$sampleSizeUnit,
+                      eventRemarks           = query_out$eventRemarks,
+                      minimumElevationInMeters = query_out$altitude,
+                      maximumElevationInMeters = query_out$altitude,
+                      locationRemarks        = query_out$locationRemarks,
+                      decimalLatitude        = mean(c(query_out$latN,
+                                                      query_out$latS)),
+                      decimalLongitude       = mean(c(query_out$lonE,
+                                                      query_out$lonW)),
+                      geodeticDatum          = "EPSG:4326",
+                      coordinatePrecision    = max(c(abs(query_out$lonE - query_out$lonW),
+                                                     abs(query_out$latS - query_out$latN))),
+                      footprintWKT           = paste0("POLYGON ((", query_out$lonE, " ", 
+                                                                    query_out$latN, ", ",
+                                                                    query_out$lonW, " ", 
+                                                                    query_out$latN, ", ",
+                                                                    query_out$lonW, " ", 
+                                                                    query_out$latS, ", ",
+                                                                    query_out$lonE, " ", 
+                                                                    query_out$latS, "))"),
+                      footprintSRS           = "EPSG:4326",
+                      georeferencedBy        = query_out$ContactName,
+                      earliestEonOrLowestEonothem  = "Phanerozoic",
+                      latestEonOrHighestEonothem   = "Phanerozoic",
+                      earliestEraOrLowestErathem   = "Cenozoic",
+                      latestEraOrHighestErathem    = "Cenozoic",
+                      earliestPeriodOrLowestSystem = age_bin$earliestPeriodOrLowestSystem,
+                      latestPeriodOrHighestSystem  = age_bin$latestPeriodOrHighestSystem,
+                      earliestEpochOrLowestSeries  = age_bin$earliestEpochOrLowestSeries,
+                      latestEpochOrHighestSeries   = age_bin$latestEpochOrHighestSeries,
+                      earliestAgeOrLowestStage     = age_bin$earliestAgeOrLowestStage,
+                      latestAgeOrHighestStage      = age_bin$latestAgeOrHighestStage,
+                      #lithostratigraphicTerms = ,
+                      #identificationQualifier = ,
+                      identifiedBy                 = query_out$ContactName,
+                      scientificName               = query_out$scientificName,
+                      scientificNameAuthorship     = query_out$scientificNameAuthorship,
+                      stringsAsFactors = FALSE)
+
+# Post hoc modifications. This uses the output and then adds content:
+# This is for concatenated strings, like "Cooccurs with"
+
+for(i in 1:nrow(output)){
+  # Add the cooccurrance data, parsing all taxa (or occurrence IDs) present in the
+  # analysis unit (except the current sample)
+  cooccurrance <- output$scientificName[which(output$collectionID == output$collectionID[i])]
+  cooccurranceID <- output$occurrenceID[which(output$collectionID == output$collectionID[i])]
+  
+  # except the current sample:
+  cooccurrance <- cooccurrance[!cooccurrance %in% output$scientificName[i]]
+  cooccurranceID <- cooccurranceID[!cooccurranceID %in% output$occurrenceID[i]]
+  
+  output$associatedTaxa[i] <- paste0("cooccurrs with:", cooccurrance, collapse = "|")
+  output$associatedOccurrences[i] <- paste0("cooccurrs with:", cooccurranceID, collapse = "|")
+  
+}
+
+for(i in 1:nrow(output)) {
+  # assign samplingEffort:
+  samp_eff <- sum(output$sampleSizeValue[which(output$collectionID == output$collectionID[i] & 
+                                                 output$sampleSizeUnit == output$sampleSizeUnit[i])])
+  output$samplingEffort[i] <- samp_eff
+}
+
+for(i in 1:nrow(output)) {
+  # Match the geopolitical data:
+  geopol <- sqlQuery(con, 
+           paste0("SELECT * FROM NDB.SiteGeoPolitical AS sgp INNER JOIN NDB.GeoPoliticalUnits as gpl ON sgp.GeoPoliticalID = gpl.GeoPoliticalID WHERE (sgp.SiteID =", query_out$siteid[i],")"),
+           stringsAsFactors=FALSE)
+  
+  if("country" %in% geopol$GeoPoliticalUnit) {
+    output$country[i] <- geopol$GeoPoliticalName[which(geopol$GeoPoliticalUnit == "country")]
+  }
+  
+  if(any(regexpr("county", geopol$GeoPoliticalUnit))>-1) {
+    output$county[i] <- geopol$GeoPoliticalName[which(regexpr("county", geopol$GeoPoliticalUnit)>-1)]
+  }
+  
+  if(any(which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit)>-1))) {
+    output$stateProvince[i] <- geopol$GeoPoliticalName[which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit)>-1)]
+  }
+}
+
+write.csv(output, '1001_test.csv', row.names = FALSE)
+
+```
