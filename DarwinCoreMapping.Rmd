@@ -2,7 +2,7 @@
 title: "DarwnCore Alignment"
 author: "Simon Goring, Jack Williams, Mark Uhen, Michael McLennan"
 date: "July 10, 2016"
-output: word_document
+output: html_document
 ---
 
 <style type="text/css">
