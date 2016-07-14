@@ -153,14 +153,16 @@ table tr th :last-child, table tr td :last-child {
 <h1>DwC Alignment:</h1>
 <div id="record-level-terms" class="section level2">
 <h2>Record Level Terms</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -168,101 +170,121 @@ table tr th :last-child, table tr td :last-child {
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;Dataset&quot;</code></td>
 <td align="left">dcterms:type</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left">Dataset + modification</td>
 <td align="left">dcterms:modified</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;English&quot;</code></td>
 <td align="left">dcterms:language</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><a href="http://creativecommons.org/licenses/by/4.0/deed.en_US">CC-BY-4.0</a></td>
 <td align="left">dcterms:license</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>Contacts:ContactName</code></td>
 <td align="left">dcterms:rightsHolder</td>
 <td align="left">A person or organization owning or managing rights over the resource.</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">dcterms:accessRights</td>
 <td align="left">Information about who can access the resource or an indication of its security status.</td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left">[Data citation from papers?]</td>
 <td align="left">dcterms:bibliographicCitation</td>
 <td align="left">A bibliographic reference for the resource.</td>
 </tr>
 <tr class="even">
-<td align="left">year from submission date</td>
+<td align="left">*</td>
+<td align="left">submission date</td>
 <td align="left">gbif:year</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">dcterms:references</td>
 <td align="left">A related resource that is referenced, cited, or otherwise pointed to by the described resource.</td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left">IGSNs for samples?</td>
 <td align="left">institutionID</td>
 <td align="left">An identifier for the institution having custody of the object(s) or information referred to in the record.</td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>AnalysisUnitID:AnalysisUnits</code></td>
 <td align="left">collectionID</td>
 <td align="left">An identifier for the collection or dataset from which the record was derived.</td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>DatasetID:Datasets</code></td>
 <td align="left">datasetID</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"><code>RepositoryInstitutions:Acronym</code></td>
 <td align="left">institutionCode</td>
 <td align="left">The name (or acronym) in use by the institution having custody of the object(s) or information referred to in the record.</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">collectionCode</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;Neotoma Dataset *n*&quot;</code></td>
 <td align="left">datasetName</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">ownerInstitutionCode</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">basisOfRecord</td>
 <td align="left">The specific nature of the data record.</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">informationWithheld</td>
 <td align="left">Additional information that exists, but that has not been shared in the given record.</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">dataGeneralizations</td>
 <td align="left">Actions taken to make the shared data less specific or complete than in its original form. Suggests that alternative data of higher quality may be available on request.</td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">dynamicProperties</td>
 <td align="left">A list of additional measurements, facts, characteristics, or assertions about the record. Meant to provide a mechanism for structured content. JSON structured: “{”thing“:value}”</td>
@@ -272,14 +294,16 @@ table tr th :last-child, table tr td :last-child {
 </div>
 <div id="organism" class="section level2">
 <h2>Organism</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -287,107 +311,128 @@ table tr th :last-child, table tr td :last-child {
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>AnalysisUnits:AnalysisUnitID</code> + <code>TaxonID</code></td>
 <td align="left">occurrenceID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">catalogNumber</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">recordNumber</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>DatasetPI</code> or <code>Contacts:ContactName</code></td>
 <td align="left">recordedBy</td>
 <td align="left">Could also be the dataset PI</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left">Pollen grains are not individuals, could work with <code>MNI</code> counts</td>
 <td align="left">individualCount</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">organismQuantity</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">organismQuantityType</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">sex</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">lifeStage</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">reproductiveCondition</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">behavior</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">establishmentMeans</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>present</code></td>
 <td align="left">occurrenceStatus</td>
 <td align="left">A statement about the presence or absence of a Taxon at a Location. Recommended best practice is to use a controlled vocabulary.</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">preparations</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">disposition</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">associatedMedia</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left">`<code>Publications:Citation</code> pipe separated</td>
 <td align="left">associatedReferences</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">associatedSequences</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;cooccurrs with: &quot;</code></td>
 <td align="left">associatedTaxa</td>
 <td align="left">A list (concatenated and separated) of identifiers or names of taxa and their associations with the Occurrence.</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">otherCatalogNumbers</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
-<td align="left">Compound <code>VariableElement:VariableElements</code>, <code>Data:Value</code>, <code>VariableUnits:VariableUnit</code></td>
+<td align="left"></td>
+<td align="left"></td>
 <td align="left">occurrenceRemarks</td>
 <td align="left">Comments or notes about the Occurrence.</td>
 </tr>
@@ -396,14 +441,16 @@ table tr th :last-child, table tr td :last-child {
 </div>
 <div id="organism-1" class="section level2">
 <h2>Organism</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -412,35 +459,42 @@ table tr th :last-child, table tr td :last-child {
 <tbody>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">organismID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">organismName</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">organismScope</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left">Same as <code>associatedTaxa</code>, but with Occurrence IDs</td>
 <td align="left">associatedOccurrences</td>
 <td align="left">A list (concatenated and separated) of identifiers of other Occurrence records and their associations to this Occurrence.</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">associatedOrganisms</td>
 <td align="left">A list (concatenated and separated) of identifiers of other Organisms and their associations to this Organism.</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">previousIdentifications</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">organismRemarks</td>
 <td align="left"></td>
@@ -453,6 +507,7 @@ table tr th :last-child, table tr td :last-child {
 <table>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -460,6 +515,7 @@ table tr th :last-child, table tr td :last-child {
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left"></td>
 <td align="left">IGSN</td>
 <td align="left">materialSampleID</td>
 <td align="left"></td>
@@ -469,14 +525,16 @@ table tr th :last-child, table tr td :last-child {
 </div>
 <div id="event-humanobservation-machineobservation" class="section level2">
 <h2>Event, HumanObservation, MachineObservation</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -484,91 +542,109 @@ table tr th :last-child, table tr td :last-child {
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>AnalysisUnitID</code></td>
 <td align="left">eventID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>CollectionUnitID</code></td>
 <td align="left">parentEventID</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">fieldNumber</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>CollectionUnits:CollDate</code></td>
 <td align="left">eventDate</td>
 <td align="left">The date-time or interval during which an Event occurred.</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">eventTime</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>1</code></td>
 <td align="left">startDayOfYear</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>365</code> or <code>366</code></td>
 <td align="left">endDayOfYear</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left">get year from <code>CollectionUnits:CollDate</code></td>
 <td align="left">year</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left">get month from <code>CollectionUnits:CollDate</code></td>
 <td align="left">month</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left">get day from <code>CollectionUnits:CollDate</code></td>
 <td align="left">day</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">verbatimEventDate</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">habitat</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>Datasets:datasettype</code></td>
 <td align="left">samplingProtocol</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>Data:value</code></td>
 <td align="left">sampleSizeValue</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>VariableUnits:VariableUnit</code></td>
 <td align="left">sampleSizeUnit</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left">Total count for the analysis unit</td>
 <td align="left">samplingEffort</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">fieldNotes</td>
 <td align="left">One of a) an indicator of the existence of, b) a reference to (publication, URI), or c) the text of notes taken in the field about the Event.</td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>CollectionUnits:Notes</code></td>
 <td align="left">eventRemarks</td>
 <td align="left"></td>
@@ -578,14 +654,16 @@ table tr th :last-child, table tr td :last-child {
 </div>
 <div id="location" class="section level2">
 <h2>Location</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -594,220 +672,264 @@ table tr th :last-child, table tr td :last-child {
 <tbody>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">locationID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>GeopoliticalUnits</code></td>
 <td align="left">higherGeographyID</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>GeopoliticalUnits</code></td>
 <td align="left">higherGeography</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">continent</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">waterBody</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">islandGroup</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">island</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>GeoPoliticalUnits:GeoPoliticalName</code></td>
 <td align="left">country</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>GeopoliticalUnits</code></td>
 <td align="left">countryCode</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>GeopoliticalUnits</code></td>
 <td align="left">stateProvince</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">county</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">municipality</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">locality</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">verbatimLocality</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"><code>Sites:Altitude</code></td>
 <td align="left">minimumElevationInMeters</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"><code>Sites:Altitude</code></td>
 <td align="left">maximumElevationInMeters</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">verbatimElevation</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">minimumDepthInMeters</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">maximumDepthInMeters</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">verbatimDepth</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">minimumDistanceAboveSurfaceInMeters</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">maximumDistanceAboveSurfaceInMeters</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">locationAccordingTo</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>Sites:SiteDescription</code></td>
 <td align="left">locationRemarks</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>Sites:LongitudeEast</code></td>
 <td align="left">decimalLatitude</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>Sites:LatitudeNorth</code></td>
 <td align="left">decimalLongitude</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>EPSG:4326</code></td>
 <td align="left">geodeticDatum</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">coordinateUncertaintyInMeters</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>max(c(Sites:LongitudeEast - Sites:LongitudeWest,</code> <code>Sites:LatitudeNorth - Sites:LatitudeSouth))</code></td>
-<td align="left"></td>
 <td align="left">coordinatePrecision</td>
+<td align="left">A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude.</td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">pointRadiusSpatialFit</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">verbatimCoordinates</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">verbatimLatitude</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">verbatimLongitude</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">verbatimCoordinateSystem</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">verbatimSRS</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left">e.g., <code>POLYGON ((10 20, 11 20, 11 21, 10 21, 10 20))</code></td>
 <td align="left">footprintWKT</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>EPSG:4326</code></td>
 <td align="left">footprintSRS</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">footprintSpatialFit</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>DatasetPI</code></td>
 <td align="left">georeferencedBy</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">georeferencedDate</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">georeferenceProtocol</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">georeferenceSources</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">georeferenceVerificationStatus</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">georeferenceRemarks</td>
 <td align="left"></td>
@@ -817,14 +939,16 @@ table tr th :last-child, table tr td :last-child {
 </div>
 <div id="geologicalcontext" class="section level2">
 <h2>GeologicalContext</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -833,90 +957,108 @@ table tr th :last-child, table tr td :last-child {
 <tbody>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">geologicalContextID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>&quot;Phanerozoic&quot;</code></td>
 <td align="left">earliestEonOrLowestEonothem</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;Phanerozoic&quot;</code></td>
 <td align="left">latestEonOrHighestEonothem</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>&quot;Cenozoic&quot;</code></td>
 <td align="left">earliestEraOrLowestErathem</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;Cenozoic&quot;</code></td>
 <td align="left">latestEraOrHighestErathem</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>&quot;Quaternary&quot;</code> - but check</td>
 <td align="left">earliestPeriodOrLowestSystem</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;Quaternary&quot;</code> - but check</td>
 <td align="left">latestPeriodOrHighestSystem</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>&quot;Holocene&quot;</code> or <code>&quot;Pleistocene&quot;</code> - but check</td>
 <td align="left">earliestEpochOrLowestSeries</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>&quot;Holocene&quot;</code> or <code>&quot;Pleistocene&quot;</code> - but check</td>
 <td align="left">latestEpochOrHighestSeries</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left"><code>RelativeAges:CalAgeOlder</code> or <code>SampleAges:CalAgeOlder</code></td>
+<td align="left">*</td>
+<td align="left">Ages in the Holocene are geographically constrained, but we have relative ages.</td>
 <td align="left">earliestAgeOrLowestStage</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
-<td align="left"><code>RelativeAges:CalAgeYounger</code> or <code>SampleAges:CalAgeYounger</code></td>
+<td align="left">*</td>
+<td align="left">Ages in the Holocene are geographically constrained, but we have relative ages.</td>
 <td align="left">latestAgeOrHighestStage</td>
 <td align="left">The full name of the latest possible geochronologic age or highest chronostratigraphic stage attributable to the stratigraphic horizon from which the cataloged item was collected.</td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">lowestBiostratigraphicZone</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">highestBiostratigraphicZone</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"><code>Lithology:Description</code></td>
 <td align="left">lithostratigraphicTerms</td>
-<td align="left"></td>
+<td align="left"><strong>Note</strong>: This is complicated, you need to find depth &amp; lithographic terms.</td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">group</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">formation</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">member</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">bed</td>
 <td align="left"></td>
@@ -926,14 +1068,16 @@ table tr th :last-child, table tr td :last-child {
 </div>
 <div id="identification" class="section level2">
 <h2>Identification</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -942,40 +1086,48 @@ table tr th :last-child, table tr td :last-child {
 <tbody>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">identificationID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">regex search for key qualifiers</td>
+<td align="left"></td>
+<td align="left">regex search for key qualifiers (<em>e.g.</em>, ?, cf, type)</td>
 <td align="left">identificationQualifier</td>
 <td align="left">A brief phrase or a standard term (“cf.”, “aff.”) to express the determiner’s doubts about the Identification.</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">typeStatus</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>DatasetPI</code></td>
 <td align="left">identifiedBy</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">dateIdentified</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">identificationReferences</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">identificationVerificationStatus</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">identificationRemarks</td>
 <td align="left"></td>
@@ -985,14 +1137,16 @@ table tr th :last-child, table tr td :last-child {
 </div>
 <div id="taxon" class="section level2">
 <h2>Taxon</h2>
-<table style="width:42%;">
+<table style="width:58%;">
 <colgroup>
+<col width="16%"></col>
 <col width="11%"></col>
 <col width="15%"></col>
 <col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -1001,165 +1155,198 @@ table tr th :last-child, table tr td :last-child {
 <tbody>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">taxonID</td>
 <td align="left">An identifier for the set of taxon information (data associated with the Taxon class). May be a global unique identifier or an identifier specific to the data set.</td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"><code>Taxa:TaxonID</code></td>
 <td align="left">scientificNameID</td>
 <td align="left">An identifier for the nomenclatural (not taxonomic) details of a scientific name.</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">acceptedNameUsageID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">parentNameUsageID</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">originalNameUsageID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">nameAccordingToID</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>Taxa:PublicationID</code></td>
 <td align="left">namePublishedInID</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">taxonConceptID</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">*</td>
 <td align="left"><code>Taxa:TaxonName</code></td>
 <td align="left">scientificName</td>
 <td align="left">The full scientific name, with authorship and date information if known. When forming part of an Identification, this should be the name in lowest level taxonomic rank that can be determined. This term should not contain identification qualifications, which should instead be supplied in the identificationQualifier term.</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">acceptedNameUsage</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">parentNameUsage</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">originalNameUsage</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">nameAccordingTo</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">namePublishedIn</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">namePublishedInYear</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">higherClassification</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">kingdom</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">phylum</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">class</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">order</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">family</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">genus</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">subgenus</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">specificEpithet</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">infraspecificEpithet</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">taxonRank</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">verbatimTaxonRank</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">*</td>
 <td align="left"><code>Taxa:Author</code></td>
 <td align="left">scientificNameAuthorship</td>
 <td align="left">The authorship information for the scientificName formatted according to the conventions of the applicable nomenclaturalCode.</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">vernacularName</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">nomenclaturalCode</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">taxonomicStatus</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
+<td align="left"></td>
 <td align="left">nomenclaturalStatus</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
 <td align="left"></td>
 <td align="left">taxonRemarks</td>
 <td align="left"></td>
@@ -1174,6 +1361,7 @@ table tr th :last-child, table tr td :last-child {
 <table>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -1233,6 +1421,7 @@ table tr th :last-child, table tr td :last-child {
 <table>
 <thead>
 <tr class="header">
+<th align="left">Implemented</th>
 <th align="left">Neotoma</th>
 <th align="left">DarwinCore</th>
 <th align="left">Description</th>
@@ -1393,7 +1582,6 @@ output &lt;-  data.frame(&quot;dcterms:type&quot;         = query_out$`dcterms:t
                       eventRemarks           = query_out$eventRemarks,
                       minimumElevationInMeters = query_out$altitude,
                       maximumElevationInMeters = query_out$altitude,
-                      locationRemarks        = query_out$locationRemarks,
                       decimalLatitude        = mean(c(query_out$latN,
                                                       query_out$latS)),
                       decimalLongitude       = mean(c(query_out$lonE,

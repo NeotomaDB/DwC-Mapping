@@ -158,7 +158,7 @@ table tr th :last-child, table tr td :last-child {
 | * | `Sites:LatitudeNorth` | decimalLongitude | |
 | * | `EPSG:4326` | geodeticDatum | |
 |  | | coordinateUncertaintyInMeters | |
-| * | `max(c(Sites:LongitudeEast - Sites:LongitudeWest,` \n `Sites:LatitudeNorth - Sites:LatitudeSouth))` | | coordinatePrecision | A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude. |
+| * | `max(c(Sites:LongitudeEast - Sites:LongitudeWest,` \n `Sites:LatitudeNorth - Sites:LatitudeSouth))` | coordinatePrecision | A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude. |
 |  | | pointRadiusSpatialFit | |
 |  | | verbatimCoordinates | |
 |  | | verbatimLatitude | |
