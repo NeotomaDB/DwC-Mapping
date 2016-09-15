@@ -14,26 +14,35 @@ test_dwc_export <- function(x){
   # For each dataset, get all the analysis units:
   query_out <- sqlQuery(con, 
                         query = paste0("SELECT        'dataset' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, cu.CollDate AS eventDate, cnt.ContactName, 
-                                       data.Value AS sampleSizeValue, au.AnalysisUnitID AS eventID, cu.CollectionUnitID AS parentEventID, taxa_1.TaxonID, taxa_1.TaxonName AS scientificName, taxa_1.Author AS scientificNameAuthorship, 
-                                       dst.DatasetType AS samplingProtocol, cu.Notes AS eventRemarks, varu.VariableUnits AS sampleSizeUnit, sts.SiteID AS siteid, sts.Altitude AS altitude, sts.SiteDescription AS locationRemarks, 
-                                       sts.SiteName AS siteName, sts.SiteDescription AS siteDescription, sts.SiteName AS Expr1, sts.LongitudeEast AS lonE, sts.LongitudeWest AS lonW, sts.LatitudeNorth AS latN, sts.LatitudeSouth AS latS, 
-                                       sage.Age AS age, sage.AgeYounger AS ageYounger, sage.AgeOlder AS ageOlder
+                         data.Value AS sampleSizeValue, au.AnalysisUnitID AS eventID, cu.CollectionUnitID AS parentEventID, taxa.TaxonID, taxa.TaxonName AS scientificName, taxa.Author AS scientificNameAuthorship, 
+                                       dst.DatasetType AS samplingProtocol, cu.Notes AS eventRemarks, varu.VariableUnits AS sampleSizeUnit, sts.SiteID, sts.Altitude, sts.SiteDescription AS locationRemarks, sts.SiteName, sts.SiteDescription, 
+                                       sts.SiteName AS Expr1, sts.LongitudeEast AS lonE, sts.LongitudeWest AS lonW, sts.LatitudeNorth AS latN, sts.LatitudeSouth AS latS, sage.Age, sage.AgeYounger, sage.AgeOlder, atyp.AgeType
                                        FROM            NDB.Datasets AS ds INNER JOIN
                                        NDB.Samples AS smp ON smp.DatasetID = ds.DatasetID INNER JOIN
-                                       NDB.CollectionUnits AS cu ON cu.CollectionUnitID = ds.CollectionUnitID INNER JOIN
-                                       NDB.DatasetPIs AS dpi ON dpi.DatasetID = ds.DatasetID INNER JOIN
+                                       NDB.CollectionUnits AS cu ON cu.CollectionUnitID = ds.CollectionUnitID LEFT OUTER JOIN
+                                       NDB.DatasetPIs AS dpi ON dpi.DatasetID = ds.DatasetID LEFT OUTER JOIN
                                        NDB.Contacts AS cnt ON cnt.ContactID = dpi.ContactID INNER JOIN
                                        NDB.AnalysisUnits AS au ON au.AnalysisUnitID = smp.AnalysisUnitID INNER JOIN
                                        NDB.Data AS data ON smp.SampleID = data.SampleID INNER JOIN
                                        NDB.Variables AS vari ON data.VariableID = vari.VariableID INNER JOIN
                                        NDB.VariableUnits AS varu ON vari.VariableUnitsID = varu.VariableUnitsID INNER JOIN
-                                       (SELECT        TaxonID, TaxonCode, TaxonName, Author, Valid, HigherTaxonID, Extinct, TaxaGroupID, PublicationID, ValidatorID, ValidateDate, Notes, RecDateCreated, RecDateModified
-                                       FROM            NDB.Taxa AS Taxa
-                                       WHERE        (TaxaGroupID <> 'LAB')) AS taxa_1 ON vari.TaxonID = taxa_1.TaxonID INNER JOIN
+                                       NDB.Taxa AS taxa ON vari.TaxonID = taxa.TaxonID INNER JOIN
                                        NDB.DatasetTypes AS dst ON ds.DatasetTypeID = dst.DatasetTypeID INNER JOIN
                                        NDB.Sites AS sts ON cu.SiteID = sts.SiteID INNER JOIN
-                                       NDB.SampleAges AS sage ON smp.SampleID = sage.SampleID
-                                       WHERE        (ds.DatasetID = ",dataset,")"), stringsAsFactors = FALSE)
+                                       NDB.SampleAges AS sage ON smp.SampleID = sage.SampleID INNER JOIN
+                                       NDB.Chronologies AS chron ON sage.ChronologyID = chron.ChronologyID INNER JOIN
+                                       NDB.AgeTypes AS atyp ON chron.AgeTypeID = atyp.AgeTypeID
+                                       WHERE        (ds.DatasetID = ", dataset,")"), stringsAsFactors = FALSE)
+  
+  if (length(query_out) == 0) {
+    warning("No output returned.\n")
+    output <- c(NA, NA)
+    write.csv(output, 
+              paste0('dwc_test_output/empty_',dataset_id, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+              row.names = FALSE)
+    odbcCloseAll()
+    return(NULL)
+  }
   
   # This should tell us whether or not the collection year was a leap year.  Unfortunately, many records
   # do not have a collection date.  If this is the case, I'm not sure what we do. . . 
@@ -91,7 +100,7 @@ test_dwc_export <- function(x){
                         "dcterms:rightsHolder" = query_out$ContactName,
                         "dcterms:bibliographicCitation" = pubs,
                         "gbif:year"            = format(as.POSIXct(query_out$`gbif:year`), "%Y"),
-                        #"dcterms:references"  = NA,  # link to external references
+                        "dcterms:references"   = paste0("http://apps.neotomadb.org/explorer/?datasetid=", dataset),
                         locationID             = paste0("Neotoma Site: ", query_out$siteid),
                         locality               = query_out$siteName,
                         locationRemarks        = query_out$siteDescription,
@@ -147,6 +156,10 @@ test_dwc_export <- function(x){
                         latestEpochOrHighestSeries   = age_bin$latestEpochOrHighestSeries,
                         earliestAgeOrLowestStage     = age_bin$earliestAgeOrLowestStage,
                         latestAgeOrHighestStage      = age_bin$latestAgeOrHighestStage,
+                        estimatedSampleAge           = query_out$age,
+                        latestSampleAge              = query_out$ageOlder,
+                        earliestSampleAge            = query_out$ageYounger,
+                        sampleAgeType                = query_out$ageType,
                         #lithostratigraphicTerms = ,
                         #identificationQualifier = ,
                         taxonID                      = paste0("Neotoma_taxon - ", query_out$TaxonID),
