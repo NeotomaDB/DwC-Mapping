@@ -1,6 +1,6 @@
 # Mapping Neotoma against the DarwinCore Schema
 
-<img src="c4pcdw.jpg" width="100">
+<img src="images/c4pcdw.jpg" alt="Cyber4Paleo Development Workshop Logo" style="float:right;width:180px;height:180px;padding-left:10px">
 
 This repository tracks the development of efforts to map Neotoma dataset records against the [DarwinCore](http://rs.tdwg.org/dwc/) schema to facilitate greater data discovery, reuse and sustainability of records archived within the Neotoma Paleoecological Database.  This project is part of the EarthCube Integrative Activities proposal between Neotoma and the Paleobiological Database, and is one step along the path to upload Neotoma records to [BISON](http://bison.usgs.ornl.gov/) and [GBIF](http://www.gbif.org/).
 
@@ -24,5 +24,6 @@ Mapping the Neotoma Database structure onto DarwinCore standards is relatively c
 
 The database itself is available as a SQL Server snapshot from the Neotoma Paleoecological Database's website [here](http://www.neotomadb.org/snapshots), or on [figshare.org]() at the Neotoma Database Snapshot project [here](https://figshare.com/authors/Data_Backup_Neotoma_Paleoecological_Database/2741398).
 
+This work is supported through the National Science Foundation's [EarthCube Initiative](earthcube.org) through NSF Award Numbers [1541002](http://www.nsf.gov/awardsearch/showAward?AWD_ID=1541002) and [1340301](http://www.nsf.gov/awardsearch/showAward?AWD_ID=1340301&HistoricalAwards=false).
 
-ADD EARTHCUBE HERE.
+<img src=images/logo_earthcube_no-subhead_horizontal.png style="height:180px;">
