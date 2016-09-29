@@ -1,47 +1,150 @@
 library(RODBC, quietly = TRUE, verbose = FALSE)
 library(neotoma)
+library(dplyr)
 
 datasets <- get_dataset()
 
 test_dwc_export <- function(x){
   
-  dataset_id <- x$dataset.meta$dataset.id
-  con <- odbcDriverConnect('driver={SQL Server};server=SIMONGORING-PC\\SQLEXPRESS;database=Neotoma;trusted_connection=true')
+  cat(paste0('Testing: ',x$dataset.meta$dataset.id, '_test_', x$dataset.meta$dataset.type, '\n'))
   
-  # Do this by dataset (I think this makes more sense)
-  dataset <- dataset_id
+  if (x$dataset.meta$dataset.type %in% c('geochronologic', 
+                                         'loss-on-ignition',
+                                         'paleomagnetic',
+                                         'energy dispersive X-ray spectroscopy (EDS/EDX)',
+                                         'X-ray diffraction (XRD)',
+                                         'X-ray fluorescence (XRF)',
+                                         'charcoal',
+                                         'physical sedimentology',
+                                         'geochemistry',
+                                         'water chemistry')) {
+    return(NULL)
+  }
+  
+  dataset <- x$dataset.meta$dataset.id
+  con <- odbcDriverConnect('driver={SQL Server};server=SIMONGORING-PC\\SQLEXPRESS;database=Neotoma;trusted_connection=true')
   
   # For each dataset, get all the analysis units:
   query_out <- sqlQuery(con, 
-                        query = paste0("SELECT        'dataset' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, cu.CollDate AS eventDate, cnt.ContactName, 
-                         data.Value AS sampleSizeValue, au.AnalysisUnitID AS eventID, cu.CollectionUnitID AS parentEventID, taxa.TaxonID, taxa.TaxonName AS scientificName, taxa.Author AS scientificNameAuthorship, 
-                                       dst.DatasetType AS samplingProtocol, cu.Notes AS eventRemarks, varu.VariableUnits AS sampleSizeUnit, sts.SiteID, sts.Altitude, sts.SiteDescription AS locationRemarks, sts.SiteName, sts.SiteDescription, 
-                                       sts.SiteName AS Expr1, sts.LongitudeEast AS lonE, sts.LongitudeWest AS lonW, sts.LatitudeNorth AS latN, sts.LatitudeSouth AS latS, sage.Age, sage.AgeYounger, sage.AgeOlder, atyp.AgeType
-                                       FROM            NDB.Datasets AS ds INNER JOIN
+                        query = paste0("SELECT 'dataset' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], 
+                                        ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, 
+                                        cu.CollDate AS eventDate, 
+                                        data.Value AS sampleSizeValue, au.AnalysisUnitID AS eventID, 
+                                        cu.CollectionUnitID AS parentEventID, taxa.TaxonID, 
+                                        taxa.TaxonName AS scientificName, taxa.TaxaGroupID, 
+                                        taxa.Author AS scientificNameAuthorship, 
+                                        dst.DatasetType AS samplingProtocol, cu.Notes AS eventRemarks, 
+                                        varu.VariableUnits AS sampleSizeUnit, sts.SiteID, sts.Altitude, 
+                                        sts.SiteDescription AS locationRemarks, sts.SiteName, 
+                                        sts.SiteDescription, sts.SiteName AS Expr1, 
+                                        sts.LongitudeEast AS lonE, sts.LongitudeWest AS lonW, 
+                                        sts.LatitudeNorth AS latN, sts.LatitudeSouth AS latS, 
+                                        sage.Age, sage.AgeYounger, sage.AgeOlder, atyp.AgeType, 
+                                        chron.IsDefault, chron.DatePrepared
+                                       FROM NDB.Datasets AS ds INNER JOIN
                                        NDB.Samples AS smp ON smp.DatasetID = ds.DatasetID INNER JOIN
                                        NDB.CollectionUnits AS cu ON cu.CollectionUnitID = ds.CollectionUnitID LEFT OUTER JOIN
-                                       NDB.DatasetPIs AS dpi ON dpi.DatasetID = ds.DatasetID LEFT OUTER JOIN
-                                       NDB.Contacts AS cnt ON cnt.ContactID = dpi.ContactID INNER JOIN
                                        NDB.AnalysisUnits AS au ON au.AnalysisUnitID = smp.AnalysisUnitID INNER JOIN
                                        NDB.Data AS data ON smp.SampleID = data.SampleID INNER JOIN
                                        NDB.Variables AS vari ON data.VariableID = vari.VariableID INNER JOIN
                                        NDB.VariableUnits AS varu ON vari.VariableUnitsID = varu.VariableUnitsID INNER JOIN
                                        NDB.Taxa AS taxa ON vari.TaxonID = taxa.TaxonID INNER JOIN
                                        NDB.DatasetTypes AS dst ON ds.DatasetTypeID = dst.DatasetTypeID INNER JOIN
-                                       NDB.Sites AS sts ON cu.SiteID = sts.SiteID INNER JOIN
-                                       NDB.SampleAges AS sage ON smp.SampleID = sage.SampleID INNER JOIN
-                                       NDB.Chronologies AS chron ON sage.ChronologyID = chron.ChronologyID INNER JOIN
+                                       NDB.Sites AS sts ON cu.SiteID = sts.SiteID LEFT OUTER JOIN
+                                       NDB.SampleAges AS sage ON smp.SampleID = sage.SampleID LEFT OUTER JOIN
+                                       NDB.Chronologies AS chron ON sage.ChronologyID = chron.ChronologyID LEFT OUTER JOIN
                                        NDB.AgeTypes AS atyp ON chron.AgeTypeID = atyp.AgeTypeID
-                                       WHERE        (ds.DatasetID = ", dataset,")"), stringsAsFactors = FALSE)
+                                       WHERE        (ds.DatasetID = ",dataset,")"), stringsAsFactors = FALSE)
   
-  if (length(query_out) == 0) {
-    warning("No output returned.\n")
+  if (nrow(query_out) == 0) {
+    warning("No entry in the local database.")
     output <- c(NA, NA)
     write.csv(output, 
-              paste0('dwc_test_output/empty_',dataset_id, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
               row.names = FALSE)
     odbcCloseAll()
     return(NULL)
+  }
+  
+  contacts <- sqlQuery(con, 
+                       query = paste0("SELECT cnt.ContactName FROM
+                                      NDB.Datasets AS ds INNER JOIN
+                                      NDB.DatasetPIs AS dpi ON dpi.DatasetID = ds.DatasetID LEFT OUTER JOIN
+                                      NDB.Contacts AS cnt ON cnt.ContactID = dpi.ContactID
+                                      WHERE (ds.DatasetID = ",dataset,")"), stringsAsFactors = FALSE)
+  if (nrow(contacts) > 0) {
+    query_out$ContactName <- paste0(unlist(contacts),
+                                    collapse = "|")
+  } else {
+    warning("No contact name associated with this dataset.")
+    query_out$ContactName <- NA
+  }
+  
+  if (nrow(query_out) == 0) {
+    warning("No output returned.\n")
+    output <- c(NA, NA)
+    write.csv(output, 
+              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+              row.names = FALSE)
+    odbcCloseAll()
+    return(NULL)
+  }
+  
+  if (all(query_out$TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED"))) {
+    warning("Dataset is not an acceptable type for upload to GBIF.")
+    output <- c(NA, NA)
+    write.csv(output, 
+              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+              row.names = FALSE)
+    odbcCloseAll()
+    return(NULL)
+  }
+  
+  if (any(query_out$TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED"))) {
+    query_out <- subset(query_out, 
+                        !TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED"))
+  }
+
+  
+  # This is the section that deals with multiple chronologies
+  if (any(duplicated(query_out[,c("AnalysisUnitID", "TaxonID", "sampleSizeUnit")]))) {
+    cat("Multiple Default chronologies. . .\n")
+    
+    if (any(query_out$IsDefault) & !all(is.na(query_out$IsDefault))) {
+      # Pull the default, but there isn't always a default. . . 
+      query_out <- subset(query_out, IsDefault == TRUE)
+    }
+    
+    # There's a hierarchy to the date types:
+    age_hier <- c('Calendar years BP', 'Calendar years AD/BC', 'Varve years BP', 
+                  'Calibrated radiocarbon years BP', 'Radiocarbon years BP')
+    
+    model_levels <- match(query_out$AgeType, age_hier)
+    
+    if (any(max(model_levels) > model_levels)) {
+      query_out <- query_out[match(query_out$AgeType, age_hier) == max(model_levels),]
+    }
+    
+    if (any(duplicated(query_out[,c("AnalysisUnitID", "TaxonID", "sampleSizeUnit")]))) {
+      # If there's still duplicates, take the most recent:
+      recent <- which.max(as.Date(query_out$DatePrepared))
+      if (length(recent) > 0) {
+        query_out <- subset(query_out, DatePrepared == query_out$DatePrepared[recent])
+      } else {
+        warning("Remaining chronologies have no assigned dates, can't distinguish between them.")
+        output <- c(NA, NA)
+        write.csv(output, 
+                  paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+                  row.names = FALSE)
+        odbcCloseAll()
+        return(NULL)
+      }
+    }
+    
+    if (any(duplicated(query_out[,c("AnalysisUnitID", "TaxonID", "sampleSizeUnit")]))) {
+      # I should have caught all the errors, but if I didn't . . . 
+      stop("There remain multiple default chronologies with the same date of development & age type.")
+    }
   }
   
   # This should tell us whether or not the collection year was a leap year.  Unfortunately, many records
@@ -54,9 +157,9 @@ test_dwc_export <- function(x){
   
   # Find the appropriate age &cetera:
   ages <- read.csv('data/geolage.csv', stringsAsFactors = FALSE)
-  age_bin <- data.frame(agePoint      = findInterval(query_out$age/1e6, ages$End),
-                        youngInterval = findInterval(query_out$ageYounger, ages$End),
-                        oldInterval   = findInterval(query_out$ageYounger, ages$End))
+  age_bin <- data.frame(agePoint      = findInterval(query_out$Age/1e6, ages$End),
+                        youngInterval = findInterval(query_out$AgeYounger/1e6, ages$End),
+                        oldInterval   = findInterval(query_out$AgeYounger/1e6, ages$End))
   
   for (i in 1:nrow(age_bin)) {
     
@@ -95,20 +198,26 @@ test_dwc_export <- function(x){
   
   output <-  data.frame("dcterms:type"         = query_out$`dcterms:type`,
                         "dcterms:modified"     = as.Date(query_out$`dcterms:modified`),
-                        "dcterms:language"     = "English",
+                        "dcterms:language"     = "en-US",
                         "dcterms:license"      = "http://creativecommons.org/licenses/by/4.0/deed.en_US",
                         "dcterms:rightsHolder" = query_out$ContactName,
+                        "dcterms:accessRights" = "public",
                         "dcterms:bibliographicCitation" = pubs,
                         "gbif:year"            = format(as.POSIXct(query_out$`gbif:year`), "%Y"),
                         "dcterms:references"   = paste0("http://apps.neotomadb.org/explorer/?datasetid=", dataset),
-                        locationID             = paste0("Neotoma Site: ", query_out$siteid),
-                        locality               = query_out$siteName,
-                        locationRemarks        = query_out$siteDescription,
+                        locationID             = paste0("http://api.neotomadb.org/v1/data/sites/", query_out$SiteID),
+                        locality               = query_out$SiteName,
+                        locationRemarks        = query_out$SiteDescription,
                         collectionID           = paste0("Neotoma Analysis Unit ", query_out$AnalysisUnitID),
-                        datasetID              = paste0("http://api.neotomadb.org/v1/data/datasets?datasetids=", dataset),
+                        datasetID              = paste0("http://api.neotomadb.org/v1/data/datasets/", dataset),
                         #institutionCode       = NA, # I can't find the link here. . .
-                        datasetName            = paste0(query_out$siteName, " ", 
+                        datasetName            = paste0(query_out$SiteName, " ", 
                                                         query_out$samplingProtocol, ' dataset'),
+                        dynamicProperties      = paste0('"{"estimatedSampleAge":', query_out$Age,',',
+                                                        '"latestSampleAge":', query_out$AgeOlder,',',
+                                                        '"earliestSampleAge":', query_out$AgeYounger,',',
+                                                        '"sampleAgeType":', query_out$AgeType,',',
+                                                        '"sampleAgeDatum":','}"'),
                         occurrenceID           = paste0('Neotoma_occ_', 
                                                         query_out$AnalysisUnitID, '-', 
                                                         query_out$TaxonID),
@@ -127,8 +236,8 @@ test_dwc_export <- function(x){
                         sampleSizeValue        = query_out$sampleSizeValue,
                         sampleSizeUnit         = query_out$sampleSizeUnit,
                         eventRemarks           = query_out$eventRemarks,
-                        minimumElevationInMeters = query_out$altitude,
-                        maximumElevationInMeters = query_out$altitude,
+                        minimumElevationInMeters = query_out$Altitude,
+                        maximumElevationInMeters = query_out$Altitude,
                         decimalLatitude        = mean(c(query_out$latN,
                                                         query_out$latS)),
                         decimalLongitude       = mean(c(query_out$lonE,
@@ -144,7 +253,10 @@ test_dwc_export <- function(x){
                                                         query_out$latS, ", ",
                                                         query_out$lonE, " ", 
                                                         query_out$latS, "))"),
-                        footprintSRS           = "EPSG:4326",
+                        footprintSRS           = paste0('GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",',
+                                                        'SPHEROID["WGS_1984",6378137,298.257223563]],',
+                                                        'PRIMEM["Greenwich",0],UNIT["Degree",',
+                                                        '0.0174532925199433]]'),
                         georeferencedBy        = query_out$ContactName,
                         earliestEonOrLowestEonothem  = "Phanerozoic",
                         latestEonOrHighestEonothem   = "Phanerozoic",
@@ -156,17 +268,33 @@ test_dwc_export <- function(x){
                         latestEpochOrHighestSeries   = age_bin$latestEpochOrHighestSeries,
                         earliestAgeOrLowestStage     = age_bin$earliestAgeOrLowestStage,
                         latestAgeOrHighestStage      = age_bin$latestAgeOrHighestStage,
-                        estimatedSampleAge           = query_out$age,
-                        latestSampleAge              = query_out$ageOlder,
-                        earliestSampleAge            = query_out$ageYounger,
-                        sampleAgeType                = query_out$ageType,
                         #lithostratigraphicTerms = ,
-                        #identificationQualifier = ,
+                        identificationQualifier = NA,
                         taxonID                      = paste0("Neotoma_taxon - ", query_out$TaxonID),
                         identifiedBy                 = query_out$ContactName,
                         scientificName               = query_out$scientificName,
                         scientificNameAuthorship     = query_out$scientificNameAuthorship,
                         stringsAsFactors = FALSE)
+  
+  if (length(grep("?",   query_out$scientificName, fixed = TRUE)) > 0) {
+    output$identificationQualifier[grep("?",   query_out$scientificName, fixed = TRUE)] <- "?"  
+  }
+  
+  if (length(grep("cf.",   query_out$scientificName, fixed = TRUE)) > 0) {
+    output$identificationQualifier[grep("cf.", query_out$scientificName, fixed = TRUE)] <- "cf."
+  }
+  
+  if (length(grep("type",   query_out$scientificName, fixed = TRUE)) > 0) {
+    output$identificationQualifier[grep("-type", query_out$scientificName, fixed = TRUE)] <- "type"
+  }
+  
+  if (length(grep("aff.",   query_out$scientificName, fixed = TRUE)) > 0) {
+    output$identificationQualifier[grep("aff.",   query_out$scientificName, fixed = TRUE)] <- "aff."
+  }
+  
+  if (length(grep("undiff.",   query_out$scientificName, fixed = TRUE)) > 0) {
+    output$identificationQualifier[grep("undiff.",   query_out$scientificName, fixed = TRUE)] <- "undiff."
+  }
   
   # Post hoc modifications. This uses the output and then adds content:
   # This is for concatenated strings, like "Cooccurs with"
@@ -193,29 +321,64 @@ test_dwc_export <- function(x){
     output$samplingEffort[i] <- samp_eff
   }
   
-  for (i in 1:nrow(output)) {
+  if (length(unique(query_out$SiteID)) == 1) {
     # Match the geopolitical data:
     geopol <- sqlQuery(con, 
-                       paste0("SELECT * FROM NDB.SiteGeoPolitical AS sgp INNER JOIN NDB.GeoPoliticalUnits as gpl ON sgp.GeoPoliticalID = gpl.GeoPoliticalID WHERE (sgp.SiteID =", query_out$siteid[i],")"),
+                       paste0("SELECT * FROM NDB.SiteGeoPolitical AS sgp INNER JOIN NDB.GeoPoliticalUnits as gpl ON sgp.GeoPoliticalID = gpl.GeoPoliticalID WHERE (sgp.SiteID =", unique(query_out$SiteID),")"),
                        stringsAsFactors = FALSE)
     
     if ("country" %in% geopol$GeoPoliticalUnit) {
-      output$country[i] <- geopol$GeoPoliticalName[which(geopol$GeoPoliticalUnit == "country")]
+      output$country <- geopol$GeoPoliticalName[which(geopol$GeoPoliticalUnit == "country")]
     }
     
-    if (any(regexpr("county", geopol$GeoPoliticalUnit)) > -1) {
-      output$county[i] <- geopol$GeoPoliticalName[which(regexpr("county", geopol$GeoPoliticalUnit) > -1)]
+    if (any(regexpr("county", geopol$GeoPoliticalUnit) > -1)) {
+      output$county <- geopol$GeoPoliticalName[which(regexpr("county", geopol$GeoPoliticalUnit) > -1)]
     }
     
-    if (any(which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1))) {
-      output$stateProvince[i] <- geopol$GeoPoliticalName[which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1)]
+    if (any(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1)) {
+      output$stateProvince <- geopol$GeoPoliticalName[which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1)]
+    }  
+  } else {
+    
+    for (i in 1:nrow(output)) {
+      
+      # Match the geopolitical data:
+      geopol <- sqlQuery(con, 
+                         paste0("SELECT * FROM NDB.SiteGeoPolitical AS sgp INNER JOIN NDB.GeoPoliticalUnits as gpl ON sgp.GeoPoliticalID = gpl.GeoPoliticalID WHERE (sgp.SiteID =", query_out$SiteID[i],")"),
+                         stringsAsFactors = FALSE)
+      
+      if ("country" %in% geopol$GeoPoliticalUnit) {
+        output$country[i] <- geopol$GeoPoliticalName[which(geopol$GeoPoliticalUnit == "country")]
+      }
+      
+      if (any(regexpr("county", geopol$GeoPoliticalUnit)) > -1) {
+        output$county[i] <- geopol$GeoPoliticalName[which(regexpr("county", geopol$GeoPoliticalUnit) > -1)]
+      }
+      
+      if (any(which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1))) {
+        output$stateProvince[i] <- geopol$GeoPoliticalName[which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1)]
+      }
     }
   }
-  
-  write.csv(output, 
-            paste0('dwc_test_output/',dataset_id, '_test_', x$dataset.meta$dataset.type, '.csv'), 
-            row.names = FALSE)
+  write.csv(output,
+            paste0('dwc_test_output/', x$dataset.meta$dataset.id, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+            row.names = FALSE, na = "")
   odbcCloseAll()
 }
 
-for(i in tests){try(test_dwc_export(datasets[[i]]))}
+ds_ids <-  sapply(datasets, function(x)x$dataset.meta$dataset.id)
+ds_types <- sapply(datasets, function(x)x$dataset.meta$dataset.type)
+
+tests <- sapply(unique(ds_types), function(x)sample(which(ds_types %in% x), 30, replace = TRUE)) %>% as.numeric %>% unique
+
+failure <- NA
+
+for (i in tests) {
+  dd <- try(test_dwc_export(datasets[[i]]))
+  
+  if ('try-error' %in% class(dd)) {
+    failure <- c(failure, i)
+  }
+}
+
+which(ds_ids == 2234)
