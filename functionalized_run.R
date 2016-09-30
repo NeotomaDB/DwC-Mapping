@@ -3,7 +3,7 @@ library(neotoma)
 library(dplyr)
 library(tidyr)
 
-datasets <- get_dataset()
+datasets <- neotoma::get_dataset()
 
 test_dwc_export <- function(x){
   
@@ -18,17 +18,16 @@ test_dwc_export <- function(x){
                                          'charcoal',
                                          'physical sedimentology',
                                          'geochemistry',
-                                         'water chemistry',
-                                         'macroinvertebrate')) {
+                                         'water chemistry')) {
     odbcCloseAll()
     return(NULL)
   }
   
   dataset <- x$dataset.meta$dataset.id
-  con <- odbcDriverConnect('driver={SQL Server};server=SIMONGORING-PC\\SQLEXPRESS;database=Neotoma;trusted_connection=true')
+  con <- RODBC::odbcDriverConnect('driver={SQL Server};server=SIMONGORING-PC\\SQLEXPRESS;database=Neotoma;trusted_connection=true')
   
   # For each dataset, get all the analysis units:
-  query_out <- sqlQuery(con, 
+  query_out <- RODBC::sqlQuery(con, 
                         query = paste0("SELECT 'dataset' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], 
                                         ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, 
                                         smp.SampleID,
@@ -82,7 +81,7 @@ test_dwc_export <- function(x){
   query_out$Element_Full <- gsub("(NA;)|(;NA)*|(;$)", "", query_out$Element_Full, perl = TRUE)
   
   # Some of the datasets have multiple contacts, these need to be piped:
-  contacts <- sqlQuery(con, 
+  contacts <- RODBC::sqlQuery(con, 
                        query = paste0("SELECT cnt.ContactName FROM
                                       NDB.Datasets AS ds INNER JOIN
                                       NDB.DatasetPIs AS dpi ON dpi.DatasetID = ds.DatasetID LEFT OUTER JOIN
@@ -206,7 +205,7 @@ test_dwc_export <- function(x){
     
   }
   
-  pubs <- sqlQuery(con, paste0("SELECT STUFF((SELECT '|' + pubs.Citation ", 
+  pubs <- RODBC::sqlQuery(con, paste0("SELECT STUFF((SELECT '|' + pubs.Citation ", 
                                "FROM NDB.DatasetPublications AS dsp INNER JOIN ", 
                                "NDB.Publications AS pubs ON ",
                                "dsp.PublicationID = pubs.PublicationID ", 
@@ -341,8 +340,13 @@ test_dwc_export <- function(x){
     cooccurrance <- cooccurrance[!cooccurrance %in% output$scientificName[i]]
     cooccurranceID <- cooccurranceID[!cooccurranceID %in% output$occurrenceID[i]]
     
-    output$associatedTaxa[i] <- paste0("cooccurrs with:", cooccurrance, collapse = "|")
-    output$associatedOccurrences[i] <- paste0("cooccurrs with:", cooccurranceID, collapse = "|")
+    if (length(cooccurrance) > 0) {
+      output$associatedTaxa[i] <- paste0("cooccurrs with:", cooccurrance, collapse = "|")
+      output$associatedOccurrences[i] <- paste0("cooccurrs with:", cooccurranceID, collapse = "|")
+    } else {
+      output$associatedTaxa[i] <- ""
+      output$associatedOccurrences[i] <- ""
+    }
     
   }
   
@@ -355,7 +359,7 @@ test_dwc_export <- function(x){
   
   if (length(unique(query_out$SiteID)) == 1) {
     # Match the geopolitical data:
-    geopol <- sqlQuery(con, 
+    geopol <- RODBC::sqlQuery(con, 
                        paste0("SELECT * FROM NDB.SiteGeoPolitical AS sgp INNER JOIN NDB.GeoPoliticalUnits as gpl ON sgp.GeoPoliticalID = gpl.GeoPoliticalID WHERE (sgp.SiteID =", unique(query_out$SiteID),")"),
                        stringsAsFactors = FALSE)
     
@@ -401,16 +405,18 @@ test_dwc_export <- function(x){
 ds_ids <-  sapply(datasets, function(x)x$dataset.meta$dataset.id)
 
 # I don't have as many records locally as on the server.
-ds_types <- sapply(datasets, function(x)x$dataset.meta$dataset.type)[1:19924]
+ds_types <- sapply(datasets, function(x)x$dataset.meta$dataset.type)
 
 failure <- NA
 
 tests <- sapply(unique(ds_types), function(x)sample(which(ds_types %in% x), 30, replace = TRUE)) %>% as.numeric %>% unique
 
 for (i in tests) {
-  dd <- try(test_dwc_export(datasets[[i]]))
+  if (datasets[[1]]$dataset.meta$dataset.id < 19924) {
+    dd <- try(test_dwc_export(datasets[[i]]))
   
-  if ('try-error' %in% class(dd)) {
-    failure <- na.omit(c(failure, i))
+    if ('try-error' %in% class(dd)) {
+      failure <- na.omit(c(failure, i))
+    }
   }
 }
