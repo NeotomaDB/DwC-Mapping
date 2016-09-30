@@ -1,6 +1,7 @@
 library(RODBC, quietly = TRUE, verbose = FALSE)
 library(neotoma)
 library(dplyr)
+library(tidyr)
 
 datasets <- get_dataset()
 
@@ -17,7 +18,9 @@ test_dwc_export <- function(x){
                                          'charcoal',
                                          'physical sedimentology',
                                          'geochemistry',
-                                         'water chemistry')) {
+                                         'water chemistry',
+                                         'macroinvertebrate')) {
+    odbcCloseAll()
     return(NULL)
   }
   
@@ -28,11 +31,13 @@ test_dwc_export <- function(x){
   query_out <- sqlQuery(con, 
                         query = paste0("SELECT 'dataset' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], 
                                         ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, 
+                                        smp.SampleID,
                                         cu.CollDate AS eventDate, 
                                         data.Value AS sampleSizeValue, au.AnalysisUnitID AS eventID, 
                                         cu.CollectionUnitID AS parentEventID, taxa.TaxonID, 
                                         taxa.TaxonName AS scientificName, taxa.TaxaGroupID, 
                                         taxa.Author AS scientificNameAuthorship, 
+                                        eltyp.ElementType, elpor.Portion, elsym.Symmetry, elmat.Maturity,
                                         dst.DatasetType AS samplingProtocol, cu.Notes AS eventRemarks, 
                                         varu.VariableUnits AS sampleSizeUnit, sts.SiteID, sts.Altitude, 
                                         sts.SiteDescription AS locationRemarks, sts.SiteName, 
@@ -46,7 +51,12 @@ test_dwc_export <- function(x){
                                        NDB.CollectionUnits AS cu ON cu.CollectionUnitID = ds.CollectionUnitID LEFT OUTER JOIN
                                        NDB.AnalysisUnits AS au ON au.AnalysisUnitID = smp.AnalysisUnitID INNER JOIN
                                        NDB.Data AS data ON smp.SampleID = data.SampleID INNER JOIN
-                                       NDB.Variables AS vari ON data.VariableID = vari.VariableID INNER JOIN
+                                       NDB.Variables AS vari ON data.VariableID = vari.VariableID LEFT OUTER JOIN
+                                       NDB.VariableElements AS variel ON vari.VariableElementID = variel.VariableElementID  LEFT OUTER JOIN
+                                       NDB.ElementTypes AS eltyp ON variel.ElementTypeID = eltyp.ElementTypeID  LEFT OUTER JOIN
+                                       NDB.ElementPortions as elpor ON variel.PortionID = elpor.PortionID  LEFT OUTER JOIN
+                                       NDB.ElementSymmetries as elsym ON variel.SymmetryID = elsym.SymmetryID LEFT OUTER JOIN
+                                       NDB.ElementMaturities as elmat ON variel.MaturityID = elmat.MaturityID LEFT OUTER JOIN
                                        NDB.VariableUnits AS varu ON vari.VariableUnitsID = varu.VariableUnitsID INNER JOIN
                                        NDB.Taxa AS taxa ON vari.TaxonID = taxa.TaxonID INNER JOIN
                                        NDB.DatasetTypes AS dst ON ds.DatasetTypeID = dst.DatasetTypeID INNER JOIN
@@ -66,6 +76,12 @@ test_dwc_export <- function(x){
     return(NULL)
   }
   
+  # Bind all the modifiers on the element, excluding NAs
+  query_out <- query_out %>% unite(Element_Full, ElementType, Portion, Symmetry, Maturity, sep = ";")
+  
+  query_out$Element_Full <- gsub("(NA;)|(;NA)*|(;$)", "", query_out$Element_Full, perl = TRUE)
+  
+  # Some of the datasets have multiple contacts, these need to be piped:
   contacts <- sqlQuery(con, 
                        query = paste0("SELECT cnt.ContactName FROM
                                       NDB.Datasets AS ds INNER JOIN
@@ -100,14 +116,26 @@ test_dwc_export <- function(x){
     return(NULL)
   }
   
-  if (any(query_out$TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED"))) {
+  if (any(query_out$TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED", "UPA"))) {
     query_out <- subset(query_out, 
-                        !TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED"))
+                        !TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED", "UPA"))
   }
 
+  # I get some full duplicates for some reason.  I don't see why.  For now I'm going to kill them:
+  if (any(duplicated(query_out))) {
+    warning("There's a duplicate row (for some reason).\n")
+    output <- c(NA, NA)
+    write.csv(output, 
+              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+              row.names = FALSE)
+    odbcCloseAll()
+    return(NULL)
+  }
+  
+  dup_rows <- c("AnalysisUnitID", "SampleID", "TaxonID", "sampleSizeUnit", "Element_Full")
   
   # This is the section that deals with multiple chronologies
-  if (any(duplicated(query_out[,c("AnalysisUnitID", "TaxonID", "sampleSizeUnit")]))) {
+  if (any(duplicated(query_out[,dup_rows]))) {
     cat("Multiple Default chronologies. . .\n")
     
     if (any(query_out$IsDefault) & !all(is.na(query_out$IsDefault))) {
@@ -125,7 +153,7 @@ test_dwc_export <- function(x){
       query_out <- query_out[match(query_out$AgeType, age_hier) == max(model_levels),]
     }
     
-    if (any(duplicated(query_out[,c("AnalysisUnitID", "TaxonID", "sampleSizeUnit")]))) {
+    if (any(duplicated(query_out[,dup_rows]))) {
       # If there's still duplicates, take the most recent:
       recent <- which.max(as.Date(query_out$DatePrepared))
       if (length(recent) > 0) {
@@ -141,7 +169,7 @@ test_dwc_export <- function(x){
       }
     }
     
-    if (any(duplicated(query_out[,c("AnalysisUnitID", "TaxonID", "sampleSizeUnit")]))) {
+    if (any(duplicated(query_out[,dup_rows]))) {
       # I should have caught all the errors, but if I didn't . . . 
       stop("There remain multiple default chronologies with the same date of development & age type.")
     }
@@ -189,10 +217,13 @@ test_dwc_export <- function(x){
   if (is.na(pubs)) {
     # If there are no publications associated with the record, generate a
     # "data" citation, pointing to the raw dataset:
-    pubs <- gsub('..', '.', paste0(query_out$ContactName, ". ", 
+    pubs <- gsub('..', '.', paste0(ifelse(is.na(query_out$ContactName), "Anon.", query_out$ContactName),
+                                   ". ", 
                                    format(as.POSIXct(query_out$`gbif:year`), "%Y"), ". ",
-                                   query_out$siteName, " ", query_out$samplingProtocol, 
-                                   ' dataset. Neotoma Paleoecological Database. Dataset:', dataset),
+                                   query_out$siteName, " ",
+                                   gsub("(^|[[:space:]])([[:alpha:]])", "\\1\\U\\2", query_out$samplingProtocol, perl = TRUE), 
+                                   ' Dataset. Neotoma Paleoecological Database. Dataset: ', dataset,
+                                   ' URL: apps.neotomadb.org/explorer/?datasetid=', dataset),
                  fixed = TRUE)
   }
   
@@ -222,6 +253,7 @@ test_dwc_export <- function(x){
                                                         query_out$AnalysisUnitID, '-', 
                                                         query_out$TaxonID),
                         recordedBy             = query_out$ContactName,
+                        organismQuantityType   = ifelse(query_out$Element_Full == "", NA, query_out$Element_Full),
                         occurrenceStatus       = "present",
                         associatedReferences   = ifelse(regexpr("Neotoma Paleoecological", pubs) > -1, NA, pubs),
                         eventID                = paste0("AnalysisUnit_",query_out$eventID),
@@ -367,18 +399,18 @@ test_dwc_export <- function(x){
 }
 
 ds_ids <-  sapply(datasets, function(x)x$dataset.meta$dataset.id)
-ds_types <- sapply(datasets, function(x)x$dataset.meta$dataset.type)
 
-tests <- sapply(unique(ds_types), function(x)sample(which(ds_types %in% x), 30, replace = TRUE)) %>% as.numeric %>% unique
+# I don't have as many records locally as on the server.
+ds_types <- sapply(datasets, function(x)x$dataset.meta$dataset.type)[1:19924]
 
 failure <- NA
+
+tests <- sapply(unique(ds_types), function(x)sample(which(ds_types %in% x), 30, replace = TRUE)) %>% as.numeric %>% unique
 
 for (i in tests) {
   dd <- try(test_dwc_export(datasets[[i]]))
   
   if ('try-error' %in% class(dd)) {
-    failure <- c(failure, i)
+    failure <- na.omit(c(failure, i))
   }
 }
-
-which(ds_ids == 2234)
