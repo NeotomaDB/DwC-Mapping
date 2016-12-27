@@ -235,7 +235,7 @@ test_dwc_export <- function(x){
                         "dcterms:bibliographicCitation" = pubs,
                         "gbif:year"            = format(as.POSIXct(query_out$`gbif:year`), "%Y"),
                         "dcterms:references"   = paste0("http://apps.neotomadb.org/explorer/?datasetid=", dataset),
-                        locationID             = paste0("http://api.neotomadb.org/v1/data/sites/", query_out$SiteID),
+                        locationID             = paste0("http://apps.neotomadb.org/explorer/?siteids=", query_out$SiteID),
                         locality               = query_out$SiteName,
                         locationRemarks        = query_out$SiteDescription,
                         collectionID           = paste0("Neotoma Analysis Unit ", query_out$AnalysisUnitID),

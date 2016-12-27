@@ -51,6 +51,8 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 
 # Fully Described Output
 
+** Note** - This section is still in progress (obviously), and is formatted in an incredibly ugly way.
+
 * **dcterms.type** - always `'dataset'`, these are not (generally) samples associated with collections, these are records from primary material, but generally records without associated physical specimens (although they exist in some cases).
 * **dcterms.modified** - From `NDB.Datasets:RecDateModified`, the last change to the dataset.
 * **dcterms.language** - For all records this is set to `English`.
