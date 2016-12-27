@@ -2,13 +2,21 @@
 title: "DarwnCore Alignment in Neotoma"
 author: "Simon Goring, Jack Williams, Mark Uhen, Michael McLennan"
 date: "July 10, 2016"
-output: html_document
+output:
+  html_document:
+    code_folding: show
+    highlight: pygment
+    keep_md: yes
+    number_sections: no
+    theme: journal
+    toc: yes
+    toc_depth: 3
 ---
 
 <style type="text/css">
 table {
-   padding: 0;border-collapse: collapse; 
-   layout: fixed; 
+   padding: 0;border-collapse: collapse;
+   layout: fixed;
    width: 90%; }
 table tr {
    border-top: 1px solid #cccccc;
@@ -51,71 +59,76 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 
 # Fully Described Output
 
-** Note** - This section is still in progress (obviously), and is formatted in an incredibly ugly way.
+This is the direct mapping used to generate the Neotoma export to VertNet/DarwinCore.  In places the tables and documents refer to the mapping of various DarwinCore terms to tables and fields within the Neotoma Database.  Neotoma is a SQL Server 2014 database, the format used to refer to specific fields is `XXX.yyy:zzz`, where `XXX` refers to the specific database, in most cases `NDB` for the Neotoma Database.  `yyy` refers to the tables within the Neotoma Database, while `zzz` refers to the specific field within the table.  There is more detail on the related tables within [the online Neotoma Database manual](neotoma-manual.readthedocs.org/en/latest/).
 
-* **dcterms.type** - always `'dataset'`, these are not (generally) samples associated with collections, these are records from primary material, but generally records without associated physical specimens (although they exist in some cases).
-* **dcterms.modified** - From `NDB.Datasets:RecDateModified`, the last change to the dataset.
-* **dcterms.language** - For all records this is set to `English`.
-* **dcterms.license** - We assign a [Creative Commons 4.0 License]("http://creativecommons.org/licenses/by/4.0/deed.en_US"), as per the [Neotoma Data Use Policy PDF](http://www.neotomadb.org/uploads/NeotomaDataUsePolicy.pdf)
-* **dcterms.rightsHolder** - We assign the rights to the Contact for the record.  Contact is defined elsewhere, but comes from the `NDB.Contacts:ContactName` table, on the join across dataset, dataset PIs and contacts.  Approximately line 84 in the `functionalized_run.R` file.
-* **dcterms.accessRights** - For all records this is set to `"public"`
-* **dcterms.bibliographicCitation** - This is a concatenation, either of all associated publications, or, in cases where no publication is cited, this is an automatically generated citation, using the dataset ID.
-* **gbif.year** - The year of upload to GBIF.
-* **dcterms.references** - A direct link to the Neotoma Explorer App's dataset viewer for that dataset.
-* **locationID** - A link to the Neotoma Explorer App's dataset viewer for that site (would show all associated datasets).
-* **locality** - The site name, from `NDB.Sites:SiteName`
-* **locationRemarks** - The site description from `NDB.Sites:SiteDescription`.
-* **collectionID** - 
-* **datasetID**
-* **datasetName**
-* **dynamicProperties**
-* **occurrenceID**
-* **recordedBy**
-* **organismQuantityType**
-* **occurrenceStatus**
-* **associatedReferences**
-* **eventID**
-* **parentEventID**
-* **eventDate**
-* **startDayOfYear**
-* **endDayOfYear**
-* **year**
-* **month**
-* **day**
-* **samplingProtocol**
-* **sampleSizeValue**
-* **sampleSizeUnit**
-* **eventRemarks**
-* **minimumElevationInMeters**
-* **maximumElevationInMeters**
-* **decimalLatitude**
-* **decimalLongitude**
-* **geodeticDatum**
-* **coordinatePrecision**
-* **footprintWKT**
-* **footprintSRS**
-* **georeferencedBy**
-* **earliestEonOrLowestEonothem**
-* **latestEonOrHighestEonothem**
-* **earliestEraOrLowestErathem**
-* **latestEraOrHighestErathem**
-* **earliestPeriodOrLowestSystem**
-* **latestPeriodOrHighestSystem**
-* **earliestEpochOrLowestSeries**
-* **latestEpochOrHighestSeries**
-* **earliestAgeOrLowestStage**
-* **latestAgeOrHighestStage**
-* **identificationQualifier**
-* **taxonID**
-* **identifiedBy**
-* **scientificName**
-* **scientificNameAuthorship**
-* **associatedTaxa**
-* **associatedOccurrences**
-* **samplingEffort**
-* **country**
-* **stateProvince**
+## Direct Mapping
 
+** Note** - This section is still in progress.
+
+| DarwinCore | Neotoma |
+| ------- | ---------- |
+| **dcterms.type** |  always `'dataset'`, these are not (generally) samples associated with collections, these are records from primary material, but generally records without associated physical specimens (although they exist in some cases). |
+| **dcterms.modified** | From `NDB.Datasets:RecDateModified`, the last change to the dataset. |
+| **dcterms.language** | For all records this is set to `English`. |
+| **dcterms.license** | We assign a [Creative Commons 4.0 License]("http://creativecommons.org/licenses/by/4.0/deed.en_US"), as per the [Neotoma Data Use Policy PDF](http://www.neotomadb.org/uploads/NeotomaDataUsePolicy.pdf) |
+| **dcterms.rightsHolder** | We assign the rights to the Contact for the record.  Contact is defined elsewhere, but comes from the `NDB.Contacts:ContactName` table, on the join across dataset, dataset PIs and contacts.  Approximately line 84 in the `functionalized_run.R` file. |
+| **dcterms.accessRights** | For all records this is set to `"public"` |
+| **dcterms.bibliographicCitation** | This is a concatenation, either of all associated publications, or, in cases where no publication is cited, this is an automatically generated citation, using the dataset ID. |
+| **gbif.year** | The year of upload to GBIF. |
+| **dcterms.references** | A direct link to the Neotoma Explorer App's dataset viewer for that dataset. |
+| **locationID** | A link to the Neotoma Explorer App's dataset viewer for that site (would show all  associated datasets). |
+| **locality** | The site name, from `NDB.Sites:SiteName` |
+| **locationRemarks** | The site description from `NDB.Sites:SiteDescription`. |
+| **collectionID** | The term "Neotoma Analysis Unit " concatenated with the `NDB.Sites:AnalysisUnitID` |
+| **datasetID** | An *http* link to the JSON dataset-level output. *e.g.* http://api.neotomadb.org/v1/data/datasets/10 |
+| **datasetName** |  Concatenation of `NDB.Sites.SiteName`, `NDB.DatasetTypes.DatasetType` + " dataset" |
+| **dynamicProperties** | This is currently implemented to store the age uncertainty date, with elements `estimatedSampleAge` (from `NDB.SampleAges:Age`), `latestSampleAge` (from `NDB.SampleAges:AgeOlder`), `earliestSampleAge` (from `NDB.SampleAges:AgeYounger`), `sampleAgeType` (from `NDB.AgeTypes:AgeType`) and `sampleAgeDatum`, currently unimplemented, but intended to act to define age baseline. |
+| **occurrenceID** |  Concatenation of `"Neotoma_occ_"`, the `NDB.Samples:AnalysisUnitID`, and `NDB.Taxa:TaxonID` |
+| **recordedBy** |  The `NDB.Contacts:ContactName` associated with the dataset. |
+| **organismQuantityType** |  |
+| **occurrenceStatus** |  |
+| **associatedReferences** |  |
+| **eventID** |  |
+| **parentEventID** |  |
+| **eventDate** |  |
+| **startDayOfYear** |  |
+| **endDayOfYear** |  |
+| **year** |  |
+| **month** |  |
+| **day** |  |
+| **samplingProtocol** |  |
+| **sampleSizeValue** |  |
+| **sampleSizeUnit** |  |
+| **eventRemarks** |  |
+| **minimumElevationInMeters** |  |
+| **maximumElevationInMeters** |  |
+| **decimalLatitude** |  |
+| **decimalLongitude** |  |
+| **geodeticDatum** |  |
+| **coordinatePrecision** |  |
+| **footprintWKT** |  |
+| **footprintSRS** |  |
+| **georeferencedBy** |  |
+| **earliestEonOrLowestEonothem** |  |
+| **latestEonOrHighestEonothem** |  |
+| **earliestEraOrLowestErathem** |  |
+| **latestEraOrHighestErathem** |  |
+| **earliestPeriodOrLowestSystem** |  |
+| **latestPeriodOrHighestSystem** |  |
+| **earliestEpochOrLowestSeries** |  |
+| **latestEpochOrHighestSeries** |  |
+| **earliestAgeOrLowestStage** |  |
+| **latestAgeOrHighestStage** |  |
+| **identificationQualifier** |  |
+| **taxonID** |  |
+| **identifiedBy** |  |
+| **scientificName** |  |
+| **scientificNameAuthorship** |  |
+| **associatedTaxa** |  |
+| **associatedOccurrences** |  |
+| **samplingEffort** |  |
+| **country** |  |
+| **stateProvince** |  |
 
 # All Possible DarwinCore Fields
 
@@ -151,7 +164,7 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 | * | `AnalysisUnits:AnalysisUnitID` + `TaxonID` | occurrenceID | An identifier for the Occurrence (as opposed to a particular digital record of the occurrence). In the absence of a persistent global unique identifier, construct one from a combination of identifiers in the record that will most closely make the occurrenceID globally unique. |
 |  | | catalogNumber | An identifier (preferably unique) for the record within the data set or collection. |
 |  | | recordNumber | An identifier given to the Occurrence at the time it was recorded. Often serves as a link between field notes and an Occurrence record, such as a specimen collector's number. |
-| * | `DatasetPI` or `Contacts:ContactName` | recordedBy | A list (concatenated and separated) of names of people, groups, or organizations responsible for recording the original Occurrence. The primary collector or observer, especially one who applies a personal identifier (recordNumber), should be listed first. 
+| * | `DatasetPI` or `Contacts:ContactName` | recordedBy | A list (concatenated and separated) of names of people, groups, or organizations responsible for recording the original Occurrence. The primary collector or observer, especially one who applies a personal identifier (recordNumber), should be listed first.
 |  | Pollen grains are not individuals, could work with `MNI` counts | individualCount | The number of individuals represented present at the time of the Occurrence. |
 |  | | organismQuantity | A number or enumeration value for the quantity of organisms. |
 |  | | organismQuantityType | The type of quantification system used for the quantity of organisms. |
@@ -175,7 +188,7 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 | Implemented | Neotoma | DarwinCore | Description |
 | ----------- | ------- | ---------- | ---------- |
 |  | | organismID | 	An identifier for the Organism instance (as opposed to a particular digital record of the Organism). May be a globally unique identifier or an identifier specific to the data set. |
-|  | | organismName | A textual name or label assigned to an Organism instance. | 
+|  | | organismName | A textual name or label assigned to an Organism instance. |
 |  | | organismScope | A description of the kind of Organism instance. Can be used to indicate whether the Organism instance represents a discrete organism or if it represents a particular type of aggregation. Recommended best practice is to use a controlled vocabulary.  |
 | * | Same as `associatedTaxa`, but with Occurrence IDs |  associatedOccurrences | A list (concatenated and separated) of identifiers of other Occurrence records and their associations to this Occurrence. |
 |  | |  associatedOrganisms | A list (concatenated and separated) of identifiers of other Organisms and their associations to this Organism. |
@@ -186,7 +199,7 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 
 | Implemented | Neotoma | DarwinCore | Description |
 | ----------- | ------- | ---------- | ---------- |
-|  | IGSN | materialSampleID | An identifier for the MaterialSample (as opposed to a particular digital record of the material sample). In the absence of a persistent global unique identifier, construct one from a combination of identifiers in the record that will most closely make the materialSampleID globally unique. | 
+|  | IGSN | materialSampleID | An identifier for the MaterialSample (as opposed to a particular digital record of the material sample). In the absence of a persistent global unique identifier, construct one from a combination of identifiers in the record that will most closely make the materialSampleID globally unique. |
 
 ## Event, HumanObservation, MachineObservation
 
@@ -195,7 +208,7 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 | * | `AnalysisUnitID` | eventID | An identifier for the set of information associated with an Event (something that occurs at a place and time). May be a global unique identifier or an identifier specific to the data set. |
 | * | `CollectionUnitID` | parentEventID | An identifier for the broader Event that groups this and potentially other Events. |
 |  | | fieldNumber | An identifier given to the event in the field. Often serves as a link between field notes and the Event. |
-| * | `CollectionUnits:CollDate` | eventDate | The date-time or interval during which an Event occurred. For occurrences, this is the date-time when the event was recorded. **Not suitable for a time in a geological context.** Recommended best practice is to use an encoding scheme, such as ISO 8601:2004(E). | 
+| * | `CollectionUnits:CollDate` | eventDate | The date-time or interval during which an Event occurred. For occurrences, this is the date-time when the event was recorded. **Not suitable for a time in a geological context.** Recommended best practice is to use an encoding scheme, such as ISO 8601:2004(E). |
 |  | | eventTime | The time or interval during which an Event occurred. Recommended best practice is to use an encoding scheme, such as ISO 8601:2004(E). |
 | * | `1` | startDayOfYear | The earliest ordinal day of the year on which the Event occurred (1 for January 1, 365 for December 31, except in a leap year, in which case it is 366). |
 | * | `365` or `366`| endDayOfYear | The latest ordinal day of the year on which the Event occurred (1 for January 1, 365 for December 31, except in a leap year, in which case it is 366). |
@@ -215,29 +228,29 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 
 | Implemented | Neotoma | DarwinCore | Description |
 | ----------- | ------- | ---------- | ---------- |
-|  | | locationID | An identifier for the set of location information (data associated with dcterms:Location). May be a global unique identifier or an identifier specific to the data set. | 
-| * | `GeopoliticalUnits` | higherGeographyID | An identifier for the geographic region within which the Location occurred. Recommended best practice is to use an persistent identifier from a controlled vocabulary such as the Getty Thesaurus of Geographic Names. | 
-| * | `GeopoliticalUnits` | higherGeography | A list (concatenated and separated) of geographic names less specific than the information captured in the locality term. | 
-|  | | continent | The name of the continent in which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. | 
-|  | | waterBody | The name of the water body in which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. | 
-|  | | islandGroup | The name of the island group in which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. | 
-|  | | island | The name of the island on or near which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. | 
+|  | | locationID | An identifier for the set of location information (data associated with dcterms:Location). May be a global unique identifier or an identifier specific to the data set. |
+| * | `GeopoliticalUnits` | higherGeographyID | An identifier for the geographic region within which the Location occurred. Recommended best practice is to use an persistent identifier from a controlled vocabulary such as the Getty Thesaurus of Geographic Names. |
+| * | `GeopoliticalUnits` | higherGeography | A list (concatenated and separated) of geographic names less specific than the information captured in the locality term. |
+|  | | continent | The name of the continent in which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. |
+|  | | waterBody | The name of the water body in which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. |
+|  | | islandGroup | The name of the island group in which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. |
+|  | | island | The name of the island on or near which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. |
 | * | `GeoPoliticalUnits:GeoPoliticalName` | country | The name of the country or major administrative unit in which the Location occurs. Recommended best practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names. |
 | * | `GeopoliticalUnits` | countryCode | The standard code for the country in which the Location occurs. Recommended best practice is to use ISO 3166-1-alpha-2 country codes. |
 | * | `GeopoliticalUnits` | stateProvince | The name of the next smaller administrative region than country (state, province, canton, department, region, etc.) in which the Location occurs. |
-|  | | county | The full, unabbreviated name of the next smaller administrative region than stateProvince (county, shire, department, etc.) in which the Location occurs. | 
-|  | | municipality | The full, unabbreviated name of the next smaller administrative region than county (city, municipality, etc.) in which the Location occurs. Do not use this term for a nearby named place that does not contain the actual location. | 
-|  | | locality | The specific description of the place. Less specific geographic information can be provided in other geographic terms (higherGeography, continent, country, stateProvince, county, municipality, waterBody, island, islandGroup). This term may contain information modified from the original to correct perceived errors or standardize the description. | 
-|  | | verbatimLocality | The original textual description of the place. | 
-|  | `Sites:Altitude` | minimumElevationInMeters | The lower limit of the range of elevation (altitude, usually above sea level), in meters. | 
-|  | `Sites:Altitude` | maximumElevationInMeters | The upper limit of the range of elevation (altitude, usually above sea level), in meters. | 
-|  | | verbatimElevation | The original description of the elevation (altitude, usually above sea level) of the Location. | 
-|  | | minimumDepthInMeters | The lesser depth of a range of depth below the local surface, in meters. | 
-|  | | maximumDepthInMeters | The greater depth of a range of depth below the local surface, in meters. | 
-|  | | verbatimDepth | The original description of the depth below the local surface. | 
-|  | | minimumDistanceAboveSurfaceInMeters | The lesser distance in a range of distance from a reference surface in the vertical direction, in meters. Use positive values for locations above the surface, negative values for locations below. If depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation. | 
-|  | | maximumDistanceAboveSurfaceInMeters | The greater distance in a range of distance from a reference surface in the vertical direction, in meters. Use positive values for locations above the surface, negative values for locations below. If depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation. | 
-|  | | locationAccordingTo | Information about the source of this Location information. Could be a publication (gazetteer), institution, or team of individuals. | 
+|  | | county | The full, unabbreviated name of the next smaller administrative region than stateProvince (county, shire, department, etc.) in which the Location occurs. |
+|  | | municipality | The full, unabbreviated name of the next smaller administrative region than county (city, municipality, etc.) in which the Location occurs. Do not use this term for a nearby named place that does not contain the actual location. |
+|  | | locality | The specific description of the place. Less specific geographic information can be provided in other geographic terms (higherGeography, continent, country, stateProvince, county, municipality, waterBody, island, islandGroup). This term may contain information modified from the original to correct perceived errors or standardize the description. |
+|  | | verbatimLocality | The original textual description of the place. |
+|  | `Sites:Altitude` | minimumElevationInMeters | The lower limit of the range of elevation (altitude, usually above sea level), in meters. |
+|  | `Sites:Altitude` | maximumElevationInMeters | The upper limit of the range of elevation (altitude, usually above sea level), in meters. |
+|  | | verbatimElevation | The original description of the elevation (altitude, usually above sea level) of the Location. |
+|  | | minimumDepthInMeters | The lesser depth of a range of depth below the local surface, in meters. |
+|  | | maximumDepthInMeters | The greater depth of a range of depth below the local surface, in meters. |
+|  | | verbatimDepth | The original description of the depth below the local surface. |
+|  | | minimumDistanceAboveSurfaceInMeters | The lesser distance in a range of distance from a reference surface in the vertical direction, in meters. Use positive values for locations above the surface, negative values for locations below. If depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation. |
+|  | | maximumDistanceAboveSurfaceInMeters | The greater distance in a range of distance from a reference surface in the vertical direction, in meters. Use positive values for locations above the surface, negative values for locations below. If depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation. |
+|  | | locationAccordingTo | Information about the source of this Location information. Could be a publication (gazetteer), institution, or team of individuals. |
 | * | `Sites:SiteDescription` | locationRemarks | Comments or notes about the Location. |
 | * | `Sites:LongitudeEast` | decimalLatitude | The geographic latitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a Location. Positive values are north of the Equator, negative values are south of it. Legal values lie between -90 and 90, inclusive. |
 | * | `Sites:LatitudeNorth` | decimalLongitude | The geographic longitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a Location. Positive values are east of the Greenwich Meridian, negative values are west of it. Legal values lie between -180 and 180, inclusive. |
@@ -269,7 +282,7 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 | * | `"Phanerozoic"` | latestEonOrHighestEonothem | |
 | * | `"Cenozoic"` | earliestEraOrLowestErathem | |
 | * | `"Cenozoic"` | latestEraOrHighestErathem | |
-| * | `"Quaternary"` - but check | earliestPeriodOrLowestSystem | | 
+| * | `"Quaternary"` - but check | earliestPeriodOrLowestSystem | |
 | * | `"Quaternary"` - but check | latestPeriodOrHighestSystem | |
 | * | `"Holocene"` or `"Pleistocene"` - but check | earliestEpochOrLowestSeries | |
 | * | `"Holocene"` or `"Pleistocene"` - but check | latestEpochOrHighestSeries | |
@@ -312,27 +325,27 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 |  | | acceptedNameUsage | The full name, with authorship and date information if known, of the currently valid (zoological) or accepted (botanical) taxon. |
 |  | | parentNameUsage | 	The full name, with authorship and date information if known, of the direct, most proximate higher-rank parent taxon (in a classification) of the most specific element of the scientificName. |
 |  | | originalNameUsage | The taxon name, with authorship and date information if known, as it originally appeared when first established under the rules of the associated nomenclaturalCode. The basionym (botany) or basonym (bacteriology) of the scientificName or the senior/earlier homonym for replaced names. |
-|  | | nameAccordingTo | The reference to the source in which the specific taxon concept circumscription is defined or implied - traditionally signified by the Latin "sensu" or "sec." (from secundum, meaning "according to"). For taxa that result from identifications, a reference to the keys, monographs, experts and other sources should be given. | 
-|  | | namePublishedIn | A reference for the publication in which the scientificName was originally established under the rules of the associated nomenclaturalCode. | 
+|  | | nameAccordingTo | The reference to the source in which the specific taxon concept circumscription is defined or implied - traditionally signified by the Latin "sensu" or "sec." (from secundum, meaning "according to"). For taxa that result from identifications, a reference to the keys, monographs, experts and other sources should be given. |
+|  | | namePublishedIn | A reference for the publication in which the scientificName was originally established under the rules of the associated nomenclaturalCode. |
 |  | | namePublishedInYear | The four-digit year in which the scientificName was published. |
-|  | | higherClassification | A list (concatenated and separated) of taxa names terminating at the rank immediately superior to the taxon referenced in the taxon record. | 
+|  | | higherClassification | A list (concatenated and separated) of taxa names terminating at the rank immediately superior to the taxon referenced in the taxon record. |
 |  | | kingdom | The full scientific name of the kingdom in which the taxon is classified. |
-|  | | phylum | The full scientific name of the phylum or division in which the taxon is classified. | 
-|  | | class | | 
+|  | | phylum | The full scientific name of the phylum or division in which the taxon is classified. |
+|  | | class | |
 |  | | order | |
 |  | | family | |
-|  | | genus | | 
-|  | | subgenus | | 
-|  | | specificEpithet | |  
-|  | | infraspecificEpithet | | 
-|  | | taxonRank | | 
-|  | | verbatimTaxonRank | | 
+|  | | genus | |
+|  | | subgenus | |
+|  | | specificEpithet | |
+|  | | infraspecificEpithet | |
+|  | | taxonRank | |
+|  | | verbatimTaxonRank | |
 | * | `Taxa:Author` | scientificNameAuthorship | The authorship information for the scientificName formatted according to the conventions of the applicable nomenclaturalCode. |
-|  | |  vernacularName | A common or vernacular name. | 
-|  | | nomenclaturalCode | The nomenclatural code (or codes in the case of an ambiregnal name) under which the scientificName is constructed. Recommended best practice is to use a controlled vocabulary. | 
-|  | | taxonomicStatus | The status of the use of the scientificName as a label for a taxon. Requires taxonomic opinion to define the scope of a taxon. Rules of priority then are used to define the taxonomic status of the nomenclature contained in that scope, combined with the experts opinion. It must be linked to a specific taxonomic reference that defines the concept. Recommended best practice is to use a controlled vocabulary. | 
-|  | | nomenclaturalStatus | The status related to the original publication of the name and its conformance to the relevant rules of nomenclature. It is based essentially on an algorithm according to the business rules of the code. It requires no taxonomic opinion. | 
-|  | | taxonRemarks | Comments or notes about the taxon or name. | 
+|  | |  vernacularName | A common or vernacular name. |
+|  | | nomenclaturalCode | The nomenclatural code (or codes in the case of an ambiregnal name) under which the scientificName is constructed. Recommended best practice is to use a controlled vocabulary. |
+|  | | taxonomicStatus | The status of the use of the scientificName as a label for a taxon. Requires taxonomic opinion to define the scope of a taxon. Rules of priority then are used to define the taxonomic status of the nomenclature contained in that scope, combined with the experts opinion. It must be linked to a specific taxonomic reference that defines the concept. Recommended best practice is to use a controlled vocabulary. |
+|  | | nomenclaturalStatus | The status related to the original publication of the name and its conformance to the relevant rules of nomenclature. It is based essentially on an algorithm according to the business rules of the code. It requires no taxonomic opinion. |
+|  | | taxonRemarks | Comments or notes about the taxon or name. |
 
 ## Auxiliary Terms
 ### MeasurementOrFact
@@ -342,10 +355,10 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 | | measurementID | | |
 | | measurementType | | |
 | | measurementValue | |  |
-| | measurementAccuracy | | | 
+| | measurementAccuracy | | |
 | | measurementUnit | |  |
 | | measurementDeterminedBy | | |
-| | measurementDeterminedDate | | | 
+| | measurementDeterminedDate | | |
 | | measurementMethod | | |
 | | measurementRemarks| | |
 
@@ -353,10 +366,10 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 
 | Implemented | Neotoma | DarwinCore | Description |
 | ----------- | ------- | ---------- | ---------- |
-| | | resourceRelationshipID | An identifier for a related resource (the object, rather than the subject of the relationship). | 
-| | | resourceID | | 
-| | | relatedResourceID | | 
-| | | relationshipOfResource | The relationship of the resource identified by relatedResourceID to the subject (optionally identified by the resourceID). Recommended best practice is to use a controlled vocabulary. | 
-| | | relationshipAccordingTo | | 
-| | | relationshipEstablishedDate | | 
-| | | relationshipRemarks| Comments or notes about the relationship between the two resources. | 
+| | | resourceRelationshipID | An identifier for a related resource (the object, rather than the subject of the relationship). |
+| | | resourceID | |
+| | | relatedResourceID | |
+| | | relationshipOfResource | The relationship of the resource identified by relatedResourceID to the subject (optionally identified by the resourceID). Recommended best practice is to use a controlled vocabulary. |
+| | | relationshipAccordingTo | |
+| | | relationshipEstablishedDate | |
+| | | relationshipRemarks| Comments or notes about the relationship between the two resources. |
