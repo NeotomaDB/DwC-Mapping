@@ -60,10 +60,10 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 * **dcterms.bibliographicCitation** - This is a concatenation, either of all associated publications, or, in cases where no publication is cited, this is an automatically generated citation, using the dataset ID.
 * **gbif.year** - The year of upload to GBIF.
 * **dcterms.references** - A direct link to the Neotoma Explorer App's dataset viewer for that dataset.
-* **locationID** - A link to the JSON output for the reference site.
-* **locality** - The site name, from 
-* **locationRemarks**
-* **collectionID**
+* **locationID** - A link to the Neotoma Explorer App's dataset viewer for that site (would show all associated datasets).
+* **locality** - The site name, from `NDB.Sites:SiteName`
+* **locationRemarks** - The site description from `NDB.Sites:SiteDescription`.
+* **collectionID** - 
 * **datasetID**
 * **datasetName**
 * **dynamicProperties**
