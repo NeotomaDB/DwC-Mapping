@@ -89,7 +89,7 @@ test_dwc_export <- function(x){
                                       WHERE (ds.DatasetID = ",dataset,")"), stringsAsFactors = FALSE)
   if (nrow(contacts) > 0) {
     query_out$ContactName <- paste0(unlist(contacts),
-                                    collapse = "|")
+                                    collapse = " | ")
   } else {
     warning("No contact name associated with this dataset.")
     query_out$ContactName <- NA
@@ -345,8 +345,8 @@ test_dwc_export <- function(x){
     cooccurranceID <- cooccurranceID[!cooccurranceID %in% output$occurrenceID[i]]
     
     if (length(cooccurrance) > 0) {
-      output$associatedTaxa[i] <- paste0("cooccurrs with:", cooccurrance, collapse = "|")
-      output$associatedOccurrences[i] <- paste0("cooccurrs with:", cooccurranceID, collapse = "|")
+      output$associatedTaxa[i] <- paste0("cooccurrs with:", cooccurrance, collapse = " | ")
+      output$associatedOccurrences[i] <- paste0("cooccurrs with:", cooccurranceID, collapse = " | ")
     } else {
       output$associatedTaxa[i] <- ""
       output$associatedOccurrences[i] <- ""
