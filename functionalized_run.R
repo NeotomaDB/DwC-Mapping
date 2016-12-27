@@ -28,7 +28,7 @@ test_dwc_export <- function(x){
   
   # For each dataset, get all the analysis units:
   query_out <- RODBC::sqlQuery(con, 
-                        query = paste0("SELECT 'dataset' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], 
+                        query = paste0("SELECT 'PhysicalObject' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], 
                                         ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, 
                                         smp.SampleID,
                                         cu.CollDate AS eventDate, 
@@ -227,6 +227,7 @@ test_dwc_export <- function(x){
   }
   
   output <-  data.frame("dcterms:type"         = query_out$`dcterms:type`,
+                        "basisOfRecord"        = "FossilSpecimen",
                         "dcterms:modified"     = as.Date(query_out$`dcterms:modified`),
                         "dcterms:language"     = "en-US",
                         "dcterms:license"      = "http://creativecommons.org/licenses/by/4.0/deed.en_US",

@@ -67,15 +67,16 @@ This is the direct mapping used to generate the Neotoma export to VertNet/Darwin
 
 | DarwinCore | Neotoma |
 | ------- | ---------- |
-| **dcterms.type** |  always `'dataset'`, these are not (generally) samples associated with collections, these are records from primary material, but generally records without associated physical specimens (although they exist in some cases). |
-| **dcterms.modified** | From `NDB.Datasets:RecDateModified`, the last change to the dataset. |
-| **dcterms.language** | For all records this is set to `English`. |
-| **dcterms.license** | We assign a [Creative Commons 4.0 License]("http://creativecommons.org/licenses/by/4.0/deed.en_US"), as per the [Neotoma Data Use Policy PDF](http://www.neotomadb.org/uploads/NeotomaDataUsePolicy.pdf) |
+| **dcterms:type** |  Based on [GitHub Issue #1 for the ELC Mapping](https://github.com/EarthLifeConsortium/DwC-Mapping/issues/1) we have chosen to assing this value to `"PhysicalObject"`, since all occurrences originate from PI assignment based on observations, whether the data is legacy or not. |
+| **basisOfRecord** | Given the assignment above for `dcterms:type`, the `basisOfRecord` becomes a `Fossil Specimen`. |
+| **dcterms:modified** | From `NDB.Datasets:RecDateModified`, the last change to the dataset. |
+| **dcterms:language** | For all records this is set to `English`. |
+| **dcterms:license** | We assign a [Creative Commons 4.0 License]("http://creativecommons.org/licenses/by/4.0/deed.en_US"), as per the [Neotoma Data Use Policy PDF](http://www.neotomadb.org/uploads/NeotomaDataUsePolicy.pdf) |
 | **dcterms.rightsHolder** | We assign the rights to the Contact for the record.  Contact is defined elsewhere, but comes from the `NDB.Contacts:ContactName` table, on the join across dataset, dataset PIs and contacts.  Approximately line 84 in the `functionalized_run.R` file. |
-| **dcterms.accessRights** | For all records this is set to `"public"` |
-| **dcterms.bibliographicCitation** | This is a concatenation, either of all associated publications, or, in cases where no publication is cited, this is an automatically generated citation, using the dataset ID. |
-| **gbif.year** | The year of upload to GBIF. |
-| **dcterms.references** | A direct link to the Neotoma Explorer App's dataset viewer for that dataset. |
+| **dcterms:accessRights** | For all records this is set to `"public"` |
+| **dcterms:bibliographicCitation** | This is a concatenation, either of all associated publications, or, in cases where no publication is cited, this is an automatically generated citation, using the dataset ID. |
+| **gbif:year** | The year of upload to GBIF. |
+| **dcterms:references** | A direct link to the Neotoma Explorer App's dataset viewer for that dataset. |
 | **locationID** | A link to the Neotoma Explorer App's dataset viewer for that site (would show all  associated datasets). |
 | **locality** | The site name, from `NDB.Sites:SiteName` |
 | **locationRemarks** | The site description from `NDB.Sites:SiteDescription`. |
