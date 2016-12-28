@@ -255,11 +255,11 @@ test_dwc_export <- function(x){
                         #institutionCode       = NA, # I can't find the link here. . .
                         datasetName            = paste0(query_out$SiteName, " ", 
                                                         query_out$samplingProtocol, ' dataset'),
-                        dynamicProperties      = paste0('"{"estimatedSampleAge":', query_out$Age,',',
+                        dynamicProperties      = paste0('{"estimatedSampleAge":', query_out$Age,',',
                                                         '"latestSampleAge":', query_out$AgeOlder,',',
                                                         '"earliestSampleAge":', query_out$AgeYounger,',',
                                                         '"sampleAgeType":', query_out$AgeType,',',
-                                                        '"sampleAgeDatum":','}"'),
+                                                        '"sampleAgeDatum":','}'),
                         occurrenceID           = paste0('Neotoma_occ_', 
                                                         query_out$AnalysisUnitID, '-', 
                                                         query_out$TaxonID),
@@ -369,7 +369,13 @@ test_dwc_export <- function(x){
     # assign samplingEffort:
     samp_eff <- sum(output$sampleSizeValue[which(output$collectionID == output$collectionID[i] & 
                                                    output$sampleSizeUnit == output$sampleSizeUnit[i])])
-    output$samplingEffort[i] <- samp_eff
+    
+    if (query_out$sampleSizeUnit == "Number of Identified Samples") {
+      output$samplingEffort[i] <- paste0(samp_eff, " Identified Samples")
+    } 
+    if (query_out$sampleSizeUnit == "Minimum Number of Individuals") {
+      output$samplingEffort[i] <- paste0(samp_eff, " Individuals (Minimum)")
+    }
   }
   
   if (length(unique(query_out$SiteID)) == 1) {
