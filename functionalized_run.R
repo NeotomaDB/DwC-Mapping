@@ -5,6 +5,13 @@ library(tidyr)
 
 datasets <- neotoma::get_dataset()
 
+# A function to check decimal precision:
+# `x` - a vector or a single numeric value.
+prec <- function(x, minmax = 'min'){
+  
+}
+
+
 test_dwc_export <- function(x){
   
   cat(paste0('Testing: ',x$dataset.meta$dataset.id, '_test_', x$dataset.meta$dataset.type, '\n'))
@@ -174,10 +181,14 @@ test_dwc_export <- function(x){
     }
   }
   
+  # Start of year/End of year refers to the dates of collection.  Should be NA if no collection date is
+  # reported, otherwise, should be the specific date of collection.
   # This should tell us whether or not the collection year was a leap year.  Unfortunately, many records
   # do not have a collection date.  If this is the case, I'm not sure what we do. . . 
-  eoy <- data.frame(startDayOfYear = ifelse(is.na(query_out$eventDate), NA, 1),
-                    endDayOfYear   = ifelse(as.numeric(format(as.POSIXct(query_out$eventDate), '%Y')) %% 100 %% 4 == 0, 366, 365))
+  eoy <- data.frame(startDayOfYear = ifelse(is.na(query_out$eventDate), NA, 
+                                            as.numeric(strftime(query_out$eventDate, format = '%j'))),
+                    endDayOfYear   = ifelse(is.na(query_out$eventDate), NA, 
+                                            as.numeric(strftime(query_out$eventDate, format = '%j'))))
   
   query_out$sampleSizeUnit[query_out$sampleSizeUnit %in% 'NISP'] <- "Number of Identified Samples"
   query_out$sampleSizeUnit[query_out$sampleSizeUnit %in% 'MNI'] <- "Minimum Number of Individuals"
@@ -253,7 +264,7 @@ test_dwc_export <- function(x){
                                                         query_out$AnalysisUnitID, '-', 
                                                         query_out$TaxonID),
                         recordedBy             = query_out$ContactName,
-                        organismQuantityType   = ifelse(query_out$Element_Full == "", NA, query_out$Element_Full),
+                        "dwc:preparations"     = ifelse(query_out$Element_Full == "", NA, query_out$Element_Full),
                         occurrenceStatus       = "present",
                         associatedReferences   = ifelse(regexpr("Neotoma Paleoecological", pubs) > -1, NA, pubs),
                         eventID                = paste0("AnalysisUnit_",query_out$eventID),
@@ -287,7 +298,7 @@ test_dwc_export <- function(x){
                                                         query_out$lonE, " ", 
                                                         query_out$latS, ", ",
                                                         query_out$lonE, ", ",
-                                                        query_out$latN))"),
+                                                        query_out$latN, "))"),
                         footprintSRS           = paste0('GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",',
                                                         'SPHEROID["WGS_1984",6378137,298.257223563]],',
                                                         'PRIMEM["Greenwich",0],UNIT["Degree",',
