@@ -8,9 +8,61 @@ datasets <- neotoma::get_dataset()
 # A function to check decimal precision:
 # `x` - a vector or a single numeric value.
 prec <- function(x, minmax = 'min'){
-  
+  max(sapply(strsplit(as.character(x), "\\."), function(y)ifelse(length(y) == 2, nchar(y[[2]]), 0)))
 }
 
+dms_conv <- function(x) {
+  
+  # Takes decimal degrees and converts them to dms coordinates.
+  
+  if (x < 0) { w <- TRUE }
+  
+  x <- abs(x)
+  
+  d <- x - (x %% 1)
+  m <- ((x - d) * 60) - (((x - d) * 60) %% 1)
+  s <- (x - (d + m/60)) * 3600
+  
+  c(ifelse(w, d, -d), m, ifelse(s < 0.5, 0, s))
+}
+
+dms_prec <- function(x) {
+  # Estimates precision for coordinates.  Assumes a two element numeric.
+  assertthat::assert_that(length(x) == 2 & class(x) == 'numeric')
+  
+  coords <- sapply(x, dms_conv)
+  
+  if (any(((floor(coords) - coords) > 1e-10))) {
+    # All of the degrees/minutes/seconds don't come out to round numbers.
+    return(10^(-prec(x)))
+  }
+  # We'll test increments of 1, 5, 10, 15.
+  index <- c(0, 1, 5, 10, 15)
+  
+  # returns a six by four matrix.
+  for (i in 3:1) {
+    modulo <- rbind(coords[i,1] %% c(1, 5, 10, 15, 30, 60),
+                    coords[i,2] %% c(1, 5, 10, 15, 30, 60))
+    
+    if (!all(modulo == 0)) {
+      precision <- apply(modulo, 1, function(x) suppressWarnings(min(which(!x < 1e-6))))
+      
+      values <- suppressWarnings(na.omit(as.numeric(modulo[,precision])))
+      
+      return(suppressWarnings(min(values[values > 1e-6])) * c(1, 1/60, 1/3600)[i])
+      
+    } else {
+      rounded <- NA
+    }
+  }
+  
+  if (is.na(rounded)) {
+    estimate <- NA
+  }
+  
+  return(estimate)
+  
+}
 
 test_dwc_export <- function(x){
   
@@ -35,7 +87,7 @@ test_dwc_export <- function(x){
   
   # For each dataset, get all the analysis units:
   query_out <- RODBC::sqlQuery(con, 
-                        query = paste0("SELECT 'PhysicalObject' AS [dcterms:type], ds.RecDateCreated AS [gbif:year], 
+                        query = paste0("SELECT 'PhysicalObject' AS [dcterms:type], ds.RecDateCreated AS [dcterms:date], 
                                         ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, 
                                         smp.SampleID,
                                         cu.CollDate AS eventDate, 
@@ -286,8 +338,8 @@ test_dwc_export <- function(x){
                         decimalLongitude       = mean(c(query_out$lonE,
                                                         query_out$lonW)),
                         geodeticDatum          = "EPSG:4326",
-                        coordinatePrecision    = max(c(abs(query_out$lonE - query_out$lonW),
-                                                       abs(query_out$latS - query_out$latN))),
+                        coordinatePrecision    = max(c(dms_prec(c(query_out$lonE[1], query_out$latN[1])),
+                                                       dms_prec(c(query_out$lonW[1], query_out$latS[1])))),
                         footprintWKT           = paste0("POLYGON ((", 
                                                         query_out$lonE, " ", 
                                                         query_out$latN, ", ",
