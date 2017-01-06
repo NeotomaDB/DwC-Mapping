@@ -76,7 +76,7 @@ This is the direct mapping used to generate the Neotoma export to VertNet/Darwin
 | **dcterms.rightsHolder** | We assign the rights to the Contact for the record.  Contact is defined elsewhere, but comes from the `NDB.Contacts:ContactName` table, on the join across dataset, dataset PIs and contacts.  Approximately line 84 in the `functionalized_run.R` file. |
 | **dcterms:accessRights** | For all records this is set to `"public"` |
 | **dcterms:bibliographicCitation** | This is a concatenation, either of all associated publications, or, in cases where no publication is cited, this is an automatically generated citation, using the dataset ID. |
-| **gbif:year** | The year of upload to GBIF. |
+| **dcterms:Date** | The year of upload to GBIF. |
 | **dcterms:references** | A direct link to the Neotoma Explorer App's dataset viewer for that dataset. |
 | **locationID** | A link to the Neotoma Explorer App's dataset viewer for that site (would show all  associated datasets). |
 | **locality** | The site name, from `NDB.Sites:SiteName` |
@@ -101,29 +101,29 @@ This is the direct mapping used to generate the Neotoma export to VertNet/Darwin
 | **samplingProtocol** |  |
 | **sampleSizeValue** |  |
 | **sampleSizeUnit** |  |
-| **eventRemarks** |  |
-| **minimumElevationInMeters** |  |
-| **maximumElevationInMeters** |  |
-| **decimalLatitude** |  |
-| **decimalLongitude** |  |
-| **geodeticDatum** |  |
+| **eventRemarks** | `NDB.CollectionUnit:Notes` |
+| **minimumElevationInMeters** | `NDB.Sites:Altitude` is a single value. |
+| **maximumElevationInMeters** | `NDB.Sites:Altitude` |
+| **decimalLatitude** |  `NDB.Sites:LatitudeNorth` and `NDB.Sites:LatitudeSouth`. |
+| **decimalLongitude** | `NDB.Sites:LongitudeEast` and `NDB.Sites:LongitudeWest`. |
+| **geodeticDatum** | `EPSG:4326` |
 | **coordinatePrecision** |  |
 | **footprintWKT** |  |
 | **footprintSRS** |  |
-| **georeferencedBy** |  |
-| **earliestEonOrLowestEonothem** |  |
-| **latestEonOrHighestEonothem** |  |
-| **earliestEraOrLowestErathem** |  |
-| **latestEraOrHighestErathem** |  |
-| **earliestPeriodOrLowestSystem** |  |
-| **latestPeriodOrHighestSystem** |  |
-| **earliestEpochOrLowestSeries** |  |
-| **latestEpochOrHighestSeries** |  |
-| **earliestAgeOrLowestStage** |  |
-| **latestAgeOrHighestStage** |  |
+| **georeferencedBy** | The `NDB.Contacts:ContactName` associated with the dataset. |
+| **earliestEonOrLowestEonothem** | [`Phanerozoic`](https://en.wikipedia.org/wiki/Phanerozoic) for all records. |
+| **latestEonOrHighestEonothem** |  [`Phanerozoic`](https://en.wikipedia.org/wiki/Phanerozoic) for all records. |
+| **earliestEraOrLowestErathem** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
+| **latestEraOrHighestErathem** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
+| **earliestPeriodOrLowestSystem** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
+| **latestPeriodOrHighestSystem** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
+| **earliestEpochOrLowestSeries** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
+| **latestEpochOrHighestSeries** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
+| **earliestAgeOrLowestStage** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
+| **latestAgeOrHighestStage** | Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages.  |
 | **identificationQualifier** |  |
 | **taxonID** |  |
-| **identifiedBy** |  |
+| **identifiedBy** | The `NDB.Contacts:ContactName` associated with the dataset. |
 | **scientificName** |  |
 | **scientificNameAuthorship** |  |
 | **associatedTaxa** |  |
@@ -145,7 +145,7 @@ This is the direct mapping used to generate the Neotoma export to VertNet/Darwin
 | * | `Contacts:ContactName` | dcterms:rightsHolder | A person or organization owning or managing rights over the resource. |
 | * | `"public"` | dcterms:accessRights | Information about who can access the resource or an indication of its security status. |
 | * | `DatasetPublications:Citation` | dcterms:bibliographicCitation | A bibliographic reference for the resource as a statement indicating how this record should be cited (attributed) when used. Recommended practice is to include sufficient bibliographic detail to identify the resource as unambiguously as possible. |
-| * | submission date | gbif:year | The year of data submission. |
+| * | submission date | `dcterms:year` | The year of data submission. |
 | * | Explorer link | `dcterms:references` | A related resource that is referenced, cited, or otherwise pointed to by the described resource. |
 |   | IGSNs for samples? | institutionID | An identifier for the institution having custody of the object(s) or information referred to in the record. |
 | * | `AnalysisUnitID:AnalysisUnits`| collectionID | An identifier for the collection or dataset from which the record was derived. |
