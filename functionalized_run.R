@@ -184,7 +184,7 @@ test_dwc_export <- function(x){
     warning("There's a duplicate row (for some reason).\n")
     output <- c(NA, NA)
     write.csv(output, 
-              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
+              paste0('dwc_test_output/duplicated_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
               row.names = FALSE)
     odbcCloseAll()
     return(NULL)
@@ -374,6 +374,10 @@ test_dwc_export <- function(x){
                         scientificNameAuthorship     = query_out$scientificNameAuthorship,
                         stringsAsFactors = FALSE)
   
+  ###
+  #
+  # Fixing the scientific name qualifiers
+  
   if (length(grep("?",   query_out$scientificName, fixed = TRUE)) > 0) {
     output$identificationQualifier[grep("?",   query_out$scientificName, fixed = TRUE)] <- "?"  
   }
@@ -458,14 +462,20 @@ test_dwc_export <- function(x){
       
       if ("country" %in% geopol$GeoPoliticalUnit) {
         output$country[i] <- geopol$GeoPoliticalName[which(geopol$GeoPoliticalUnit == "country")]
+      } else {
+        output$country[i] <- NA
       }
       
       if (any(regexpr("county", geopol$GeoPoliticalUnit)) > -1) {
         output$county[i] <- geopol$GeoPoliticalName[which(regexpr("county", geopol$GeoPoliticalUnit) > -1)]
+      } else {
+        output$county[i] <- NA
       }
       
       if (any(which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1))) {
         output$stateProvince[i] <- geopol$GeoPoliticalName[which(regexpr("(^province)|(^territory)|(state \\()|(^state$)", geopol$GeoPoliticalUnit) > -1)]
+      } else {
+        output$stateProvince[i] <- NA
       }
     }
   }
