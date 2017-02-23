@@ -51,6 +51,8 @@ There are three key steps in making Neotoma data available through GBIF.  The fi
 
 The second step is simply scraping the Neotoma Database, both at the dataset level for the initial push, but then secondarily, keeping GBIF up-to-date with Neotoma holdings.
 
+<a id="flowchart"/>
+
 <object data="images/DwC_Upload.svg" type="image/svg+xml" width="600">
   <img src="images/DwC_Upload.png" width="600"/>
 </object>
@@ -62,9 +64,9 @@ To then undertake the mapping of the records, we build a `csv` file for upload, 
 
 This is the direct mapping used to generate the Neotoma export to VertNet/DarwinCore.  In places the tables and documents refer to the mapping of various DarwinCore terms to tables and fields within the Neotoma Database.  Neotoma is a SQL Server 2014 database, the format used to refer to specific fields is `XXX.yyy:zzz`, where `XXX` refers to the specific database, in most cases `NDB` for the Neotoma Database.  `yyy` refers to the tables within the Neotoma Database, while `zzz` refers to the specific field within the table.  There is more detail on the related tables within [the online Neotoma Database manual](neotoma-manual.readthedocs.org/en/latest/).
 
-## Final Alignment
+<a id="finalign"/>
 
-** Note** - This section is still in progress.
+## Final Alignment
 
 | DarwinCore | Neotoma |
 | ------- | ---------- |
@@ -87,29 +89,28 @@ This is the direct mapping used to generate the Neotoma export to VertNet/Darwin
 | **dynamicProperties** | This is currently implemented to store the age uncertainty date, with elements `estimatedSampleAge` (from `NDB.SampleAges:Age`), `latestSampleAge` (from `NDB.SampleAges:AgeOlder`), `earliestSampleAge` (from `NDB.SampleAges:AgeYounger`), `sampleAgeType` (from `NDB.AgeTypes:AgeType`) and `sampleAgeDatum`, currently unimplemented, but intended to act to define age baseline. |
 | **occurrenceID** |  Concatenation of `"Neotoma_occ_"`, the `NDB.Samples:AnalysisUnitID`, and `NDB.Taxa:TaxonID` |
 | **recordedBy** |  The `NDB.Contacts:ContactName` associated with the dataset. |
-| **organismQuantityType** |  |
-| **occurrenceStatus** |  |
-| **associatedReferences** |  |
-| **eventID** |  |
-| **parentEventID** |  |
-| **eventDate** |  |
-| **startDayOfYear** |  |
-| **endDayOfYear** |  |
-| **year** |  |
-| **month** |  |
-| **day** |  |
-| **samplingProtocol** |  |
-| **sampleSizeValue** |  |
-| **sampleSizeUnit** |  |
+| **occurrenceStatus** | `present` in all cases. |
+| **associatedReferences** | Pulled from `NDB.Publications:Citation` as a pipe (`|`) separated concatenated list. |
+| **eventID** | Should be a unique string.  Currently implemented as `AnalysisUnit_XXX` where `xxx` is from `NDB.AnalysisUnit:AnalysisUnitID`.  Ideally this would be part of the API. |
+| **parentEventID** | The parent unit of an Analysis Unit is the Collection Unit: `NDB.CollectionUnit:CollectionUnitID` |
+| **eventDate** | The `NDB.CollectionUnit:CollDate` using the `POSIX` `'%Y-%m-%d'` format. [Consistent with other examples.](http://portal.vertnet.org/o/rom/vertebrate-palaeontology?id=uri-catalog-rom-palaeobiology-vertebrate-fossils-52705) |
+| **startDayOfYear** | Returns the Julian numeric day (`POSIX`: `%j`) for the event date. |
+| **endDayOfYear** | Returns the Julian numeric day (`POSIX`: `%j`) for the event date. |
+| **year** | Returns the `POSIX` year `%Y`.  |
+| **month** | Returns the `POSIX` month `%m`. |
+| **day** | Returns the `POSIX` day `%d`. |
+| **samplingProtocol** | Comes out as `"Neotoma " + NDB.DatasetType:DatasetType + " dataset"` |
+| **sampleSizeValue** |  `NDB.Data.Value` |
+| **sampleSizeUnit** | Comes from `NDB.VariableUnits:VariableUnits`  |
 | **eventRemarks** | `NDB.CollectionUnit:Notes` |
 | **minimumElevationInMeters** | `NDB.Sites:Altitude` is a single value. |
 | **maximumElevationInMeters** | `NDB.Sites:Altitude` |
 | **decimalLatitude** |  `NDB.Sites:LatitudeNorth` and `NDB.Sites:LatitudeSouth`. |
 | **decimalLongitude** | `NDB.Sites:LongitudeEast` and `NDB.Sites:LongitudeWest`. |
 | **geodeticDatum** | `EPSG:4326` |
-| **coordinatePrecision** |  |
-| **footprintWKT** |  |
-| **footprintSRS** |  |
+| **coordinatePrecision** | Uses the `NDB.Sites` location information, but additionally converts to DMS to check whether or not a value is rounded to the nearest minute or second. |
+| **footprintWKT** | WKT Polygon using the `NDB:Sites` spatial information (excepting altitude). |
+| **footprintSRS** | `GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199433]]` |
 | **georeferencedBy** | The `NDB.Contacts:ContactName` associated with the dataset. |
 | **earliestEonOrLowestEonothem** | [`Phanerozoic`](https://en.wikipedia.org/wiki/Phanerozoic) for all records. |
 | **latestEonOrHighestEonothem** |  [`Phanerozoic`](https://en.wikipedia.org/wiki/Phanerozoic) for all records. |
@@ -121,16 +122,16 @@ This is the direct mapping used to generate the Neotoma export to VertNet/Darwin
 | **latestEpochOrHighestSeries** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
 | **earliestAgeOrLowestStage** |  Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages. |
 | **latestAgeOrHighestStage** | Pulled from `NDB.SampleAges:Age`, `NDB.SampleAges:AgeOlder` and `NDB.SampleAges:AgeYounger` against geological ages.  |
-| **identificationQualifier** |  |
-| **taxonID** |  |
+| **identificationQualifier** | Pulling for qualifiers using regular expression searching in the `NDB.Taxon:ScientificName` |
+| **taxonID** | Concatenation of `"Neotoma_taxon - "` and `NDB.Taxon:TaxonID` |
 | **identifiedBy** | The `NDB.Contacts:ContactName` associated with the dataset. |
-| **scientificName** |  |
-| **scientificNameAuthorship** |  |
-| **associatedTaxa** |  |
-| **associatedOccurrences** |  |
-| **samplingEffort** |  |
-| **country** |  |
-| **stateProvince** |  |
+| **scientificName** | `NDB.Taxon:ScientificName`, but with the `identificationQualifier` removed. |
+| **scientificNameAuthorship** | `NDB.Taxon:Author` |
+| **associatedTaxa** | Concatenates all other taxa in the analysis unit using a pipe (`|`) |
+| **associatedOccurrences** | Concatenates all other occurrences using a pipe. |
+| **samplingEffort** | Sum of all sample counts within the same Collection Unit and with the same `sampleSizeUnit` (which allows for mixed samples, *e.g.* with both MNI and NISP) |
+| **country** | `NDB.SiteGeoPolitical:GeoPoliticalName` where `NDB.SiteGeoPolitical:GeoPoliticalUnit` is `country`. |
+| **stateProvince** | `NDB.SiteGeoPolitical:GeoPoliticalName` where `NDB.SiteGeoPolitical:GeoPoliticalUnit` is one of `(^province)|(^territory)|(state \\()|(^state$)`. |
 
 ## All DarwinCore Fields - Reference
 
@@ -378,4 +379,16 @@ This is the direct mapping used to generate the Neotoma export to VertNet/Darwin
 
 # Scraping Neotoma
 
+The code runs programmatically, using the script [`functionalized_run.R`](https://github.com/NeotomaDB/DwC-Mapping/blob/master/functionalized_run.R).  The script operates across each dataset within Neotoma, generating a CSV file with the content, as described above.  If the dataset is one of `'geochronologic'`, `'loss-on-ignition'`, `'paleomagnetic'`, `'energy dispersive X-ray spectroscopy (EDS/EDX)'`, `'X-ray diffraction (XRD)'`, `'X-ray fluorescence (XRF)'`, `'charcoal'`, `'physical sedimentology'`, `'geochemistry'`, and `'water chemistry'`.  These records have no biological information associated with them, and as such will not be exported.
+
+In the case that the SQL query returns a `data.frame` with no content, but is a valid dataset-type, then the returned file is pre-pended with the term `empty`.  As such, a file is generated, but the file is marked as empty.  In cases where the dataset is a valid dataset type, but contains only data from non-biological taxon groups (`"LAB"`, `"LOI"`, `"MAG"`, `"ISO"`, `"BIM"`, `"CHM"`, `"WCH"`, `"GCH"`, `"CHR"`, or `"SED"`), then the record is again returned as `empty`.  `duplicated_` records may be returned if there are Collection Units with duplicated rows.
+
+For other records, a csv is returned with the fields described in the [Final Alignment](#finalign).  Otherwise, the file is written with the name `NNNN_test_YYYY.csv`, where `NNNN` represents the dataset number and `YYYY` represents the dataset type.
+
 # Setting Triggers and Data Upload
+
+As indicated in the [flow chart](#flowchart) above, there will be an initial bulk upload of data to GBIF/VertNet.  Following this initial upload, data will be tracked, based on the initial upload date, and a query will be executed.  If the date of last update within the tables is more recent than the last upload date, then the record will be updated.  However, before the record is uploaded, it will be compared to the original file.  If the files are different, we'll proceed with upload, otherwise, the new file will replace the other locally, but not on GBIF.
+
+# Conclusion
+
+Improving accessibility for Neotoma records is important for the database community.  It provides data contributors with a broader audience for their work, it provides researchers with a broader set of available data.
