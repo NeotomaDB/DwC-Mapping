@@ -302,7 +302,7 @@ test_dwc_export <- function(x){
                         locationID             = paste0("http://apps.neotomadb.org/explorer/?siteids=", query_out$SiteID),
                         locality               = query_out$SiteName,
                         locationRemarks        = query_out$SiteDescription,
-                        collectionID           = paste0("Neotoma Analysis Unit ", query_out$AnalysisUnitID),
+                        #collectionID           = paste0("Neotoma Analysis Unit ", query_out$AnalysisUnitID),
                         datasetID              = paste0("http://api.neotomadb.org/v1/data/datasets/", dataset),
                         #institutionCode       = NA, # I can't find the link here. . .
                         datasetName            = paste0(query_out$SiteName, " ", 
@@ -494,12 +494,13 @@ failure <- NA
 
 tests <- sapply(unique(ds_types), function(x)sample(which(ds_types %in% x), 30, replace = TRUE)) %>% as.numeric %>% unique
 
-for (i in tests) {
-  if (datasets[[1]]$dataset.meta$dataset.id < 19924) {
-    dd <- try(test_dwc_export(datasets[[i]]))
-  
+tests %>% map(function(x){
+  if (datasets[[x]]$dataset.meta$dataset.id < 19924) {
+    output <- try(test_dwc_export(datasets[[i]]))
     if ('try-error' %in% class(dd)) {
-      failure <- na.omit(c(failure, i))
+      output <- data.frame(fail = datasets[[x]]$dataset.meta$dataset.id)
     }
+  
   }
-}
+  return(output) }) %>% 
+  bind_rows()
