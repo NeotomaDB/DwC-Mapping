@@ -479,6 +479,12 @@ test_dwc_export <- function(x){
       }
     }
   }
+  
+  if(output$sampleSizeValue == 1 & output$sampleSizeUnit == "present/absent") {
+    output$sampleSizeValue = NA
+    output$sampleSizeUnit  = NA
+  }
+  
   write.csv(output,
             paste0('dwc_test_output/', x$dataset.meta$dataset.id, '_test_', x$dataset.meta$dataset.type, '.csv'), 
             row.names = FALSE, na = "")
