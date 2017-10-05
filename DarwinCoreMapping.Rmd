@@ -1,16 +1,26 @@
 ---
 title: "DarwnCore Alignment in Neotoma"
-author: "Simon Goring, Jack Williams, Mark Uhen, Michael McLennan"
+author:
+- affiliation: University of Wisconsin - Madison
+  name: Simon Goring (co-authored)
+- affiliation: University of Wisconsin - Madison
+  name: John Williams
+- affiliation: George Mason University
+  name: Mark Uhen
+- affiliation: University of Wisconsin - Madison
+  name: Michael McClennan
 date: "July 10, 2016"
 output:
   html_document:
     code_folding: show
-    highlight: pygment
+    fig_caption: yes
     keep_md: yes
-    number_sections: no
-    theme: journal
+    number_sections: yes
+    self_contained: yes
+    theme: readable
     toc: yes
-    toc_float: true
+    toc_float: yes
+    highlight: pygment
     toc_depth: 3
 ---
 
@@ -47,9 +57,9 @@ The Neotoma Paleoecological database represents a rich source of data to researc
 
 To broaden the availability of data from Netoma, we are working with the Global Biodiversity Information Facility (GBIF).  GBIF is an international organization that partners with a number of organizations to make biodiversity data available online.  The use of clear metadata standards, like DarwinCore, make GBIF a useful resource, and the increased size of the data holdings further improve its utility for researchers working on global biodiversity research.
 
-There are three key steps in making Neotoma data available through GBIF.  The first is mapping Neotoma data holdings and concepts onto the metadata standards within GBIF.  This current document is based on [key metadata terms provided by DarwinCore](http://rs.tdwg.org/dwc/terms/), and the ways in which they can represent Neotoma data, across dataset types.  In cases where the current implementation of DarwinCore (or other existing metadata standards such as DublinCore) fails to represent important concepts within Neotoma, we describe new terms that can be used to supplement existing metadata.
+There are three key steps in making Neotoma data available through GBIF.  The first is mapping Neotoma data holdings and concepts onto the metadata standards within GBIF.  The first effort to cross-walk the two data resources occurred as part of the [Cyber4Paleo Community Development Workshop](http://cyber4paleo.github.io), sponsored by [EarthCube](http://earthcube.org). The cross-walk is based on [key metadata terms provided by DarwinCore](http://rs.tdwg.org/dwc/terms/), and the ways in which they can be used to represent the Neotoma data model.  In cases where the current implementation of DarwinCore (or other existing metadata standards such as DublinCore) fails to represent important concepts within Neotoma, we describe new terms that can be used to supplement existing metadata.
 
-The second step is simply scraping the Neotoma Database, both at the dataset level for the initial push, but then secondarily, keeping GBIF up-to-date with Neotoma holdings.
+Once the cross-walk is completed, we develop a functionalized implementation of the cross-walk, querying each individual dataset and mapping the metadata to the cross-walk.  This must be implemented in two phases.  In the forst, the entire holdings of Neotoma need to be parsed and passed to GBIF.  In the second, new holdings, or holdings that have changed within a certain time period, must be re-generated and/or translated to the DarwinCore model.
 
 <a id="flowchart"/>
 
@@ -58,7 +68,6 @@ The second step is simply scraping the Neotoma Database, both at the dataset lev
 </object>
 
 To then undertake the mapping of the records, we build a `csv` file for upload, from each individual record within Neotoma using the following mapping:
-
 
 # Mapping DarwinCore to Neotoma
 

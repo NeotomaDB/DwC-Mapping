@@ -1,7 +1,8 @@
 library(RODBC, quietly = TRUE, verbose = FALSE)
-library(neotoma)
-library(dplyr)
-library(tidyr)
+library(RODBCext, quietly = TRUE, verbose = FALSE)
+library(neotoma, quietly = TRUE, verbose = FALSE)
+library(dplyr, quietly = TRUE, verbose = FALSE)
+library(tidyr, quietly = TRUE, verbose = FALSE)
 
 datasets <- neotoma::get_dataset()
 
@@ -9,59 +10,6 @@ datasets <- neotoma::get_dataset()
 # `x` - a vector or a single numeric value.
 prec <- function(x, minmax = 'min'){
   max(sapply(strsplit(as.character(x), "\\."), function(y)ifelse(length(y) == 2, nchar(y[[2]]), 0)))
-}
-
-dms_conv <- function(x) {
-  
-  # Takes decimal degrees and converts them to dms coordinates.
-  
-  if (x < 0) { w <- TRUE }
-  
-  x <- abs(x)
-  
-  d <- x - (x %% 1)
-  m <- ((x - d) * 60) - (((x - d) * 60) %% 1)
-  s <- (x - (d + m/60)) * 3600
-  
-  c(ifelse(w, d, -d), m, ifelse(s < 0.5, 0, s))
-}
-
-dms_prec <- function(x) {
-  # Estimates precision for coordinates.  Assumes a two element numeric.
-  assertthat::assert_that(length(x) == 2 & class(x) == 'numeric')
-  
-  coords <- sapply(x, dms_conv)
-  
-  if (any(((floor(coords) - coords) > 1e-10))) {
-    # All of the degrees/minutes/seconds don't come out to round numbers.
-    return(10^(-prec(x)))
-  }
-  # We'll test increments of 1, 5, 10, 15.
-  index <- c(0, 1, 5, 10, 15)
-  
-  # returns a six by four matrix.
-  for (i in 3:1) {
-    modulo <- rbind(coords[i,1] %% c(1, 5, 10, 15, 30, 60),
-                    coords[i,2] %% c(1, 5, 10, 15, 30, 60))
-    
-    if (!all(modulo == 0)) {
-      precision <- apply(modulo, 1, function(x) suppressWarnings(min(which(!x < 1e-6))))
-      
-      values <- suppressWarnings(na.omit(as.numeric(modulo[,precision])))
-      
-      return(suppressWarnings(min(values[values > 1e-6])) * c(1, 1/60, 1/3600)[i])
-      
-    } else {
-      rounded <- NA
-    }
-  }
-  
-  if (is.na(rounded)) {
-    estimate <- NA
-  }
-  
-  return(estimate)
-  
 }
 
 test_dwc_export <- function(x){
@@ -87,65 +35,31 @@ test_dwc_export <- function(x){
   
   # For each dataset, get all the analysis units:
   query_out <- RODBC::sqlQuery(con, 
-                        query = paste0("SELECT 'PhysicalObject' AS [dcterms:type], ds.RecDateCreated AS [dcterms:date], 
-                                        ds.RecDateModified AS [dcterms:modified], ds.DatasetID, smp.AnalysisUnitID, 
-                                        smp.SampleID,
-                                        cu.CollDate AS eventDate, 
-                                        data.Value AS sampleSizeValue, au.AnalysisUnitID AS eventID, 
-                                        cu.CollectionUnitID AS parentEventID, taxa.TaxonID, 
-                                        taxa.TaxonName AS scientificName, taxa.TaxaGroupID, 
-                                        taxa.Author AS scientificNameAuthorship, 
-                                        eltyp.ElementType, elpor.Portion, elsym.Symmetry, elmat.Maturity,
-                                        dst.DatasetType AS samplingProtocol, cu.Notes AS eventRemarks, 
-                                        varu.VariableUnits AS sampleSizeUnit, sts.SiteID, sts.Altitude, 
-                                        sts.SiteDescription AS locationRemarks, sts.SiteName, 
-                                        sts.SiteDescription, sts.SiteName AS Expr1, 
-                                        sts.LongitudeEast AS lonE, sts.LongitudeWest AS lonW, 
-                                        sts.LatitudeNorth AS latN, sts.LatitudeSouth AS latS, 
-                                        sage.Age, sage.AgeYounger, sage.AgeOlder, atyp.AgeType, 
-                                        chron.IsDefault, chron.DatePrepared
-                                       FROM NDB.Datasets AS ds INNER JOIN
-                                       NDB.Samples AS smp ON smp.DatasetID = ds.DatasetID INNER JOIN
-                                       NDB.CollectionUnits AS cu ON cu.CollectionUnitID = ds.CollectionUnitID LEFT OUTER JOIN
-                                       NDB.AnalysisUnits AS au ON au.AnalysisUnitID = smp.AnalysisUnitID INNER JOIN
-                                       NDB.Data AS data ON smp.SampleID = data.SampleID INNER JOIN
-                                       NDB.Variables AS vari ON data.VariableID = vari.VariableID LEFT OUTER JOIN
-                                       NDB.VariableElements AS variel ON vari.VariableElementID = variel.VariableElementID  LEFT OUTER JOIN
-                                       NDB.ElementTypes AS eltyp ON variel.ElementTypeID = eltyp.ElementTypeID  LEFT OUTER JOIN
-                                       NDB.ElementPortions as elpor ON variel.PortionID = elpor.PortionID  LEFT OUTER JOIN
-                                       NDB.ElementSymmetries as elsym ON variel.SymmetryID = elsym.SymmetryID LEFT OUTER JOIN
-                                       NDB.ElementMaturities as elmat ON variel.MaturityID = elmat.MaturityID LEFT OUTER JOIN
-                                       NDB.VariableUnits AS varu ON vari.VariableUnitsID = varu.VariableUnitsID INNER JOIN
-                                       NDB.Taxa AS taxa ON vari.TaxonID = taxa.TaxonID INNER JOIN
-                                       NDB.DatasetTypes AS dst ON ds.DatasetTypeID = dst.DatasetTypeID INNER JOIN
-                                       NDB.Sites AS sts ON cu.SiteID = sts.SiteID LEFT OUTER JOIN
-                                       NDB.SampleAges AS sage ON smp.SampleID = sage.SampleID LEFT OUTER JOIN
-                                       NDB.Chronologies AS chron ON sage.ChronologyID = chron.ChronologyID LEFT OUTER JOIN
-                                       NDB.AgeTypes AS atyp ON chron.AgeTypeID = atyp.AgeTypeID
-                                       WHERE        (ds.DatasetID = ",dataset,")"), stringsAsFactors = FALSE)
+                        query = source('sql/base_query.sql'))
   
+  # Failures:
   if (nrow(query_out) == 0) {
-    warning("No entry in the local database.")
-    output <- c(NA, NA)
-    write.csv(output, 
-              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
-              row.names = FALSE)
-    odbcCloseAll()
-    return(NULL)
+    output <- data.frame(failure = x$dataset.meta$dataset.id,
+                         cause = 'No record.')
+    return(output)
+  }
+  
+  if (all(query_out$TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED"))) {
+    output <- data.frame(failure = x$dataset.meta$dataset.id,
+                         cause = "Dataset is not an acceptable type for upload to GBIF.")
+    return(output)
   }
   
   # Bind all the modifiers on the element, excluding NAs
+  # This is likely more effieient as a json_agg call in postgres.
   query_out <- query_out %>% unite(Element_Full, ElementType, Portion, Symmetry, Maturity, sep = ";")
   
   query_out$Element_Full <- gsub("(NA;)|(;NA)*|(;$)", "", query_out$Element_Full, perl = TRUE)
   
   # Some of the datasets have multiple contacts, these need to be piped:
   contacts <- RODBC::sqlQuery(con, 
-                       query = paste0("SELECT cnt.ContactName FROM
-                                      NDB.Datasets AS ds INNER JOIN
-                                      NDB.DatasetPIs AS dpi ON dpi.DatasetID = ds.DatasetID LEFT OUTER JOIN
-                                      NDB.Contacts AS cnt ON cnt.ContactID = dpi.ContactID
-                                      WHERE (ds.DatasetID = ",dataset,")"), stringsAsFactors = FALSE)
+                       query = source('sql/contact_call.sql'))
+  
   if (nrow(contacts) > 0) {
     query_out$ContactName <- paste0(unlist(contacts),
                                     collapse = " | ")
@@ -153,27 +67,7 @@ test_dwc_export <- function(x){
     warning("No contact name associated with this dataset.")
     query_out$ContactName <- NA
   }
-  
-  if (nrow(query_out) == 0) {
-    warning("No output returned.\n")
-    output <- c(NA, NA)
-    write.csv(output, 
-              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
-              row.names = FALSE)
-    odbcCloseAll()
-    return(NULL)
-  }
-  
-  if (all(query_out$TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED"))) {
-    warning("Dataset is not an acceptable type for upload to GBIF.")
-    output <- c(NA, NA)
-    write.csv(output, 
-              paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
-              row.names = FALSE)
-    odbcCloseAll()
-    return(NULL)
-  }
-  
+
   if (any(query_out$TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED", "UPA"))) {
     query_out <- subset(query_out, 
                         !TaxaGroupID %in% c("LAB", "LOI", "MAG", "ISO", "BIM", "CHM", "WCH", "GCH", "CHR", "SED", "UPA"))
@@ -181,13 +75,9 @@ test_dwc_export <- function(x){
 
   # I get some full duplicates for some reason.  I don't see why.  For now I'm going to kill them:
   if (any(duplicated(query_out))) {
-    warning("There's a duplicate row (for some reason).\n")
-    output <- c(NA, NA)
-    write.csv(output, 
-              paste0('dwc_test_output/duplicated_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
-              row.names = FALSE)
-    odbcCloseAll()
-    return(NULL)
+    output <- data.frame(failure = x$dataset.meta$dataset.id,
+                         cause = "There's a duplicate row (for some reason).\n")
+    return(output)
   }
   
   dup_rows <- c("AnalysisUnitID", "SampleID", "TaxonID", "sampleSizeUnit", "Element_Full")
@@ -217,19 +107,17 @@ test_dwc_export <- function(x){
       if (length(recent) > 0) {
         query_out <- subset(query_out, DatePrepared == query_out$DatePrepared[recent])
       } else {
-        warning("Remaining chronologies have no assigned dates, can't distinguish between them.")
-        output <- c(NA, NA)
-        write.csv(output, 
-                  paste0('dwc_test_output/empty_',dataset, '_test_', x$dataset.meta$dataset.type, '.csv'), 
-                  row.names = FALSE)
-        odbcCloseAll()
-        return(NULL)
+        output <- data.frame(failure = x$dataset.meta$dataset.id,
+                             cause = "Remaining chronologies have no assigned dates, can't distinguish between them.")
+        return(output)
       }
     }
     
     if (any(duplicated(query_out[,dup_rows]))) {
       # I should have caught all the errors, but if I didn't . . . 
-      stop("There remain multiple default chronologies with the same date of development & age type.")
+      output <- data.frame(failure = x$dataset.meta$dataset.id,
+                           cause = "There remain multiple default chronologies with the same date of development & age type.")
+      return(output)
     }
   }
   
@@ -376,27 +264,14 @@ test_dwc_export <- function(x){
   
   ###
   #
-  # Fixing the scientific name qualifiers
+  # Fixing the scientific name qualifiers:
   
-  if (length(grep("?",   query_out$scientificName, fixed = TRUE)) > 0) {
-    output$identificationQualifier[grep("?",   query_out$scientificName, fixed = TRUE)] <- "?"  
-  }
-  
-  if (length(grep("cf.",   query_out$scientificName, fixed = TRUE)) > 0) {
-    output$identificationQualifier[grep("cf.", query_out$scientificName, fixed = TRUE)] <- "cf."
-  }
-  
-  if (length(grep("type",   query_out$scientificName, fixed = TRUE)) > 0) {
-    output$identificationQualifier[grep("-type", query_out$scientificName, fixed = TRUE)] <- "type"
-  }
-  
-  if (length(grep("aff.",   query_out$scientificName, fixed = TRUE)) > 0) {
-    output$identificationQualifier[grep("aff.",   query_out$scientificName, fixed = TRUE)] <- "aff."
-  }
-  
-  if (length(grep("undiff.",   query_out$scientificName, fixed = TRUE)) > 0) {
-    output$identificationQualifier[grep("undiff.",   query_out$scientificName, fixed = TRUE)] <- "undiff."
-  }
+  output$identificationQualifier <- query_out$scientificName %>% 
+    stringi::stri_match_all_regex("(?:\\?)|(?:-type)|(?:undiff\\.)|(?:cf\\.)|(?:aff\\.)") %>%
+    purrr::map(as.data.frame, stringsAsFactors = FALSE) %>% 
+    bind_rows() %>% 
+    unlist %>% 
+    stringr::str_replace(pattern = '-', replacement = '')
   
   # Post hoc modifications. This uses the output and then adds content:
   # This is for concatenated strings, like "Cooccurs with"
