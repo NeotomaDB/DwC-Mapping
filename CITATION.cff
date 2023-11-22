@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Goring"
+  given-names: "Simon"
+  orcid: "https://orcid.org/0000-0002-2700-4605"
+- family-names: "Williams"
+  given-names: "Jack"
+- family-names: "Uhen"
+  given-names: "Mark"
+- family-names: "McClennan"
+  given-names: "Michael"
+- family-names: "Wieczorek"
+  given-names: "John"
+title: "Neotoma-DarwinCore Crosswalk"
+version: 0.1.0
+date-released: 2023-11-22
+url: "https://github.com/NeotomaDB/DwC-Mapping"
