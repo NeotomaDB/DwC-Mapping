@@ -1,3 +1,10 @@
+<!-- badges: start -->
+
+![lifecycle](https://img.shields.io/badge/lifecycle-archived-orange.svg)
+
+<!-- badges: end -->
+
+
 # Mapping Neotoma against the DarwinCore Schema
 
 <img src="images/c4pcdw.jpg" alt="Cyber4Paleo Development Workshop Logo" width = "180px">
